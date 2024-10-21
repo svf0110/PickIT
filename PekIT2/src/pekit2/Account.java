@@ -9,7 +9,7 @@ package pekit2;
  * @author Gio Turtal and Jose Laserna
  */
 
-public class Account //test
+public class Account //github test
 {
 
     private String username;
