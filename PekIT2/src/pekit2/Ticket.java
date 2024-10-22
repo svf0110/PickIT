@@ -19,7 +19,7 @@ public abstract class Ticket
     protected String phone;
     protected Date creationDate;
     protected String status;
-
+    
     public Ticket(String ticketNum, String name, String description, String email, String phone, Date creationDate)
     {
         this.ticketNum = ticketNum;
@@ -70,7 +70,7 @@ public abstract class Ticket
     {
         this.status = status;
     }
-
+      
     public String toFileString()
     {
         return String.format("%s,%s,%s,%s,%s,%d",

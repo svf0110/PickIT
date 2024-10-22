@@ -10,6 +10,7 @@ package pekit2;
  */
 import java.io.IOException;
 import java.util.Scanner;
+import javax.swing.JTextArea;
 
 public class PekIT2
 {
@@ -53,32 +54,59 @@ public class PekIT2
         }
     }
 
-    private static void handleLogin(Scanner scan, AccountHandle accountHandle) throws IOException, ClassNotFoundException
-    {
-        System.out.println("\n                 Login                     \n");
-        System.out.print("Enter username: ");
-        String username = scan.nextLine();
-        System.out.print("Enter password: ");
-        String password = scan.nextLine();
+//    private static void handleLogin(Scanner scan, AccountHandle accountHandle) throws IOException, ClassNotFoundException
+//    {
+//        System.out.println("\n                 Login                     \n");
+//        System.out.print("Enter username: ");
+//        String username = scan.nextLine();
+//        System.out.print("Enter password: ");
+//        String password = scan.nextLine();
+//
+//        Account account = accountHandle.login(username, password);
+//        if (account != null)
+//        {
+//            System.out.println("\n            Login successful!            \n");
+//            if (account.getType().equals("IT"))
+//            {
+//                ITInterface itInterface = new ITInterface();
+//                itInterface.displayMenu();
+//            }
+//            else
+//            {
+//                GuestInterface guestInterface = new GuestInterface();
+//                guestInterface.displayMenu();
+//            }
+//        }
+//        else
+//        {
+//            System.out.println("\n        Invalid login. Please try again.        \n");
+//        }
+//    }
+    
+    private static void handleLogin(Scanner scan, AccountHandle accountHandle) throws IOException, ClassNotFoundException {
+    System.out.println("\n                 Login                     \n");
+    System.out.print("Enter username: ");
+    String username = scan.nextLine();
+    System.out.print("Enter password: ");
+    String password = scan.nextLine();
 
-        Account account = accountHandle.login(username, password);
-        if (account != null)
-        {
-            System.out.println("\n            Login successful!            \n");
-            if (account.getType().equals("IT"))
-            {
-                ITInterface itInterface = new ITInterface();
-                itInterface.displayMenu();
-            }
-            else
-            {
-                GuestInterface guestInterface = new GuestInterface();
-                guestInterface.displayMenu();
-            }
+    Account account = accountHandle.login(username, password);
+    if (account != null) {
+        System.out.println("\n            Login successful!            \n");
+        
+        // Create a JTextArea to pass to ITInterface
+        JTextArea ticketDisplayArea = new JTextArea();
+        
+        if (account.getType().equals("IT")) {
+            ITInterface itInterface = new ITInterface(ticketDisplayArea);
+            itInterface.displayMenu();
+        } else {
+            GuestInterface guestInterface = new GuestInterface();
+            guestInterface.displayMenu();
         }
-        else
-        {
-            System.out.println("\n        Invalid login. Please try again.        \n");
-        }
+    } else {
+        System.out.println("\n        Invalid login. Please try again.        \n");
     }
+}
+
 }

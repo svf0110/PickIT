@@ -12,6 +12,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
+import javax.swing.JTextArea;
 
 public class TicketHandle
 {
@@ -29,10 +30,9 @@ public class TicketHandle
         String phone = scan.nextLine();
         System.out.print("Enter Description: ");
         String description = scan.nextLine();
-
+        
         Ticket ticket = null;
         String ticketNum = generateTicketNum(type); // Generate ticket number based on existing tickets
-        
         name = capitalizeFirstLetter(name);
         
         switch (type)
@@ -137,14 +137,22 @@ public class TicketHandle
         return tickets;
     }
 
-    public void displayTickets(ArrayList<Ticket> tickets)
-    {
-        for (Ticket ticket : tickets)
-        {
-            // This will call the correct toString() method for each specific Ticket subclass
-            System.out.println(ticket.toString());
-        }
+//    public void displayTickets(ArrayList<Ticket> tickets)
+//    {
+//        for (Ticket ticket : tickets)
+//        {
+//            // This will call the correct toString() method for each specific Ticket subclass
+//            System.out.println(ticket.toString());
+//        }
+//    }
+    
+    public void displayTickets(ArrayList<Ticket> tickets, JTextArea displayArea) {
+    displayArea.setText(""); // Clear the text area before displaying
+    for (Ticket ticket : tickets) {
+        // Append the ticket information to the JTextArea
+        displayArea.append(ticket.toString() + "\n");
     }
+}
 
     public void deleteTicket(ArrayList<Ticket> tickets) throws IOException
     {

@@ -78,7 +78,7 @@ public class AccountHandle
         System.out.println("\n          Account created successfully.           \n");
     }
 
-    private void saveAccount(Account account) throws IOException
+    public void saveAccount(Account account) throws IOException
     {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ACCOUNTS_FILE, true)))
         {

@@ -8,6 +8,7 @@ package pekit2;
  *
  * @author Gio Turtal and Jose Laserna
  */
+
 import java.util.Date;
 
 public class SoftwareTicket extends Ticket
@@ -31,7 +32,8 @@ public class SoftwareTicket extends Ticket
     @Override
     public String toString()
     {
-        return String.format("SoftwareTicket [TicketNumber: %s, Name: %s, Status: %s, Software: %s, Version: %s, Description: %s]",
-                getTicketNum(), getName(), getStatus(), software, version, getDescription());
+        return String.format("SoftwareTicket [TicketNumber: %s, Name: %s, Status: %s, Software: %s, Version: %s, Description: %s, Email: %s, Phone: %s, Date: %s]",
+                getTicketNum(), getName(), getStatus(), software, version, getDescription(), getEmail(), getPhone(), getCreationDate());
     }
 }
+

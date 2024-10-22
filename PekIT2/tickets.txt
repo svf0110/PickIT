@@ -1,0 +1,10 @@
+N009,Olivia johnson ,olivia.johnson@gmail.com,021-453-9275,Network speed is extremely slow during video conference.,1724990807081,Bandwidth,193.876.234.456
+N008,Daniel perez,dannyphantom22@gmail.com,022-483-2575,Unable to access shared folders on the network drive.,1724990594723,File Sharing,193.293.234.324
+N007,Jessica miller,jessica34@gmail.com,022-456-3452,VPN connection is slow and disconnects frequently during remote work.,1724990466006,VPN,192.756.234.234
+S006,Michael brown,letsgetdown2business@gmail.com,021-453-6721,Adobe Acrobat Reader is not displaying PDF documents correctly.,1724990063201,Adobe Acrobat Reader,2024
+S005,Priya singh,priyanumber1@gmail.com,022-763-1890,Antivirus software is blocking applications after recent update.,1724989939590,Antivirus,Norton Security 22.21.11
+S004,Sarah kim,starbeauty7@gmail.com,027-246-8102,Unable to open Microsoft Excel; Application Crashes Upon Startup,1724989748208,Microsoft Excel,Office 365
+H003,James carter,james.carter@gmail.com,020-987-6543,Keyboard Keys not Registering!,1724989572115,Keyboard,Logitech K120
+H002,Maria lopez,maria.lopez@gmail.com,021-123-4567,Monitor is flickering causing me eye strain.,1724989436825,Monitor,DELL U2719D
+H001,Roberto ramirez,roberto2@gmail.com,022-537-7789,Computer is Overheating (PC is Shutting Down),1724989312214,Desktop,Work PC-2345
+H010,Jeffrey,Dahmer,034-456-9876,My Computer is broken,1729562623414,,HW-5003

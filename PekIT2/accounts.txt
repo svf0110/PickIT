@@ -1,1 +1,4 @@
 admin,123,IT
+Jose,123,IT
+guest,123,Guest
+gio,123,IT

@@ -4,11 +4,11 @@
  */
 package pekit2;
 
+import java.util.Date;
 /**
  *
  * @author Gio Turtal and Jose Laserna
  */
-import java.util.Date;
 
 public class NetworkTicket extends Ticket
 {
@@ -31,7 +31,7 @@ public class NetworkTicket extends Ticket
     @Override
     public String toString()
     {
-        return String.format("NetworkTicket [TicketNumber: %s, Name: %s, Status: %s, Device: %s, IP Address: %s, Description: %s]",
-                getTicketNum(), getName(), getStatus(), device, ipAddress, getDescription());
+        return String.format("NetworkTicket [TicketNumber: %s, Name: %s, Status: %s, Device: %s, IP Address: %s, Description: %s, Email: %s, Phone: %s, Date: %s]",
+                getTicketNum(), getName(), getStatus(), device, ipAddress, getDescription(), getEmail(), getPhone(), getCreationDate());
     }
 }
