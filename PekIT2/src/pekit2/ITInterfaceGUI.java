@@ -1,116 +1,15 @@
-///*
-// * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-// * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
-// */
-//package pekit2;
-//
-///**
-// *
-// * @author jmrla
-// */
-//import javax.swing.*;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
-//import java.io.IOException;
-//import java.util.ArrayList;
-//
-//public class ITInterfaceGUI extends JFrame {
-//    private TicketHandle ticketHandle;
-//    private TicketSorting ticketSorting;
-//
-//    public ITInterfaceGUI() {
-//        ticketHandle = new TicketHandle();
-//        ticketSorting = new TicketSorting();
-//
-//        // Set up JFrame
-//        setTitle("IT Staff Menu");
-//        setSize(400, 300);
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        setLayout(null);
-//
-//        // Buttons for IT staff actions
-//        JButton viewTicketsButton = new JButton("View Tickets");
-//        viewTicketsButton.setBounds(100, 50, 200, 30);
-//        add(viewTicketsButton);
-//
-//        JButton createTicketButton = new JButton("Create Ticket");
-//        createTicketButton.setBounds(100, 100, 200, 30);
-//        add(createTicketButton);
-//
-//        JButton sortTicketsButton = new JButton("Sort Tickets");
-//        sortTicketsButton.setBounds(100, 150, 200, 30);
-//        add(sortTicketsButton);
-//
-//        JButton filterTicketsButton = new JButton("Filter Tickets");
-//        filterTicketsButton.setBounds(100, 200, 200, 30);
-//        add(filterTicketsButton);
-//
-//        // Add button listeners
-//        viewTicketsButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    ArrayList<Ticket> tickets = ticketHandle.loadTickets();
-//                    ticketHandle.displayTickets(tickets);
-//                } catch (IOException ex) {
-//                    JOptionPane.showMessageDialog(null, "Error loading tickets.");
-//                }
-//            }
-//        });
-//
-//        createTicketButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    String[] types = {"Hardware", "Software", "Network"};
-//                    String type = (String) JOptionPane.showInputDialog(null, "Select ticket type:", "Ticket Type",
-//                            JOptionPane.QUESTION_MESSAGE, null, types, types[0]);
-//
-//                    if (type != null) {
-//                        ticketHandle.createTicket(type);
-//                    }
-//                } catch (IOException ex) {
-//                    JOptionPane.showMessageDialog(null, "Error creating ticket.");
-//                }
-//            }
-//        });
-//
-//        sortTicketsButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    ArrayList<Ticket> tickets = ticketHandle.loadTickets();
-//                    ticketSorting.sortTickets(tickets);
-//                } catch (IOException ex) {
-//                    JOptionPane.showMessageDialog(null, "Error sorting tickets.");
-//                }
-//            }
-//        });
-//
-//        filterTicketsButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    ArrayList<Ticket> tickets = ticketHandle.loadTickets();
-//                    ticketSorting.filterTickets(tickets);
-//                } catch (IOException ex) {
-//                    JOptionPane.showMessageDialog(null, "Error filtering tickets.");
-//                }
-//            }
-//        });
-//    }
-//
-//    public static void main(String[] args) {
-//        ITInterfaceGUI itInterface = new ITInterfaceGUI();
-//        itInterface.setVisible(true);
-//    }
-//}
-//
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package pekit2;
 
+/**
+ *
+ * @author jmrla
+ */
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -124,34 +23,36 @@ public class ITInterfaceGUI extends JFrame {
     public ITInterfaceGUI() {
         ticketHandle = new TicketHandle();
         ticketSorting = new TicketSorting();
-        
+
         // Set up JFrame
         setTitle("IT Staff Menu");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+        setLayout(null);
 
-        // Create the ticket display area
+        // Create a JTextArea for displaying tickets
         ticketDisplayArea = new JTextArea();
         ticketDisplayArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(ticketDisplayArea);
-        add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setBounds(20, 20, 350, 300); // Adjust size and position as needed
+        add(scrollPane);
 
-        // Create button panel
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(4, 1));
-
+        // Buttons for IT staff actions
         JButton viewTicketsButton = new JButton("View Tickets");
+        viewTicketsButton.setBounds(400, 50, 150, 30);
+        add(viewTicketsButton);
+
         JButton createTicketButton = new JButton("Create Ticket");
+        createTicketButton.setBounds(400, 100, 150, 30);
+        add(createTicketButton);
+
         JButton sortTicketsButton = new JButton("Sort Tickets");
+        sortTicketsButton.setBounds(400, 150, 150, 30);
+        add(sortTicketsButton);
+
         JButton filterTicketsButton = new JButton("Filter Tickets");
-
-        buttonPanel.add(viewTicketsButton);
-        buttonPanel.add(createTicketButton);
-        buttonPanel.add(sortTicketsButton);
-        buttonPanel.add(filterTicketsButton);
-
-        add(buttonPanel, BorderLayout.EAST);
+        filterTicketsButton.setBounds(400, 200, 150, 30);
+        add(filterTicketsButton);
 
         // Add button listeners
         viewTicketsButton.addActionListener(new ActionListener() {
@@ -159,7 +60,7 @@ public class ITInterfaceGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     ArrayList<Ticket> tickets = ticketHandle.loadTickets();
-                    ticketDisplayArea.setText("");
+                    ticketDisplayArea.setText(""); // Clear the text area
                     ticketHandle.displayTickets(tickets, ticketDisplayArea);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(null, "Error loading tickets.");
@@ -170,45 +71,47 @@ public class ITInterfaceGUI extends JFrame {
         createTicketButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                createTicket();
+                try {
+                    String[] types = {"Hardware", "Software", "Network"};
+                    String type = (String) JOptionPane.showInputDialog(null, "Select ticket type:", "Ticket Type",
+                            JOptionPane.QUESTION_MESSAGE, null, types, types[0]);
+
+                    if (type != null) {
+                        ticketHandle.createTicket(type);
+                    }
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error creating ticket.");
+                }
             }
         });
 
-//        sortTicketsButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                try {
-//                    ArrayList<Ticket> tickets = ticketHandle.loadTickets();
-//                    ticketSorting.sortTickets(tickets);
-//                    ticketDisplayArea.setText("");
-//                    ticketHandle.displayTickets(tickets, ticketDisplayArea);
-//                } catch (IOException ex) {
-//                    JOptionPane.showMessageDialog(null, "Error sorting tickets.");
-//                }
-//            }
-//        });
-
         sortTicketsButton.addActionListener(new ActionListener() {
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        try {
-            ArrayList<Ticket> tickets = ticketHandle.loadTickets();
-            ticketSorting.sortTickets(tickets, ticketDisplayArea); // This line needs to pass ticketDisplayArea
-            ticketDisplayArea.setText("");
-            ticketHandle.displayTickets(tickets, ticketDisplayArea);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error sorting tickets.");
-        }
-    }
-});
-
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ArrayList<Ticket> tickets = ticketHandle.loadTickets();
+                    // Assuming sortTickets takes (ArrayList<Ticket>, JTextArea) as parameters
+                    ticketSorting.sortTickets(tickets, ticketDisplayArea);
+                    ticketDisplayArea.setText("");
+                    ticketHandle.displayTickets(tickets, ticketDisplayArea);
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error sorting tickets.");
+                }
+            }
+        });
 
         filterTicketsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     ArrayList<Ticket> tickets = ticketHandle.loadTickets();
-                    ticketSorting.filterTickets(tickets, ticketDisplayArea);
+                    String status = JOptionPane.showInputDialog(null, "Enter status to filter (e.g., Open, Closed):");
+                    if (status != null && !status.isEmpty()) {
+                        // Assuming filterTickets takes (ArrayList<Ticket>, JTextArea, String) as parameters
+                        ticketSorting.filterTickets(tickets, ticketDisplayArea);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Invalid status input.");
+                    }
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(null, "Error filtering tickets.");
                 }
@@ -216,22 +119,9 @@ public class ITInterfaceGUI extends JFrame {
         });
     }
 
-    private void createTicket() {
-        String[] types = {"Hardware", "Software", "Network"};
-        String type = (String) JOptionPane.showInputDialog(null, "Select ticket type:", "Ticket Type",
-                JOptionPane.QUESTION_MESSAGE, null, types, types[0]);
-
-        if (type != null) {
-            try {
-                ticketHandle.createTicket(type);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Error creating ticket.");
-            }
-        }
-    }
-
     public static void main(String[] args) {
         ITInterfaceGUI itInterface = new ITInterfaceGUI();
         itInterface.setVisible(true);
     }
 }
+

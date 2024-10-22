@@ -4,48 +4,53 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 public class TicketSorting {
-
-//    public void filterTickets(ArrayList<Ticket> tickets) {
-//        Scanner scan = new Scanner(System.in);
-//        System.out.println("Filter by status: (1) Open, (2) Closed, (3) Resolved");
-//        int option = scan.nextInt();
-//
-//        String status = getStatusFromOption(option);
-//        if (status.isEmpty()) {
-//            System.out.println("Invalid option.");
-//            return;
-//        }
-//
-//        displayFilteredTickets(tickets, status);
-//    }
     
-//      private void displayFilteredTickets(ArrayList<Ticket> tickets, String status) {
-//        for (Ticket ticket : tickets) {
-//            if (ticket.getStatus().equalsIgnoreCase(status)) {
-//                System.out.println(ticket.getTicketNum() + ": " + ticket.getName() + " - " + ticket.getStatus());
-//            }
-//        }
+//    public void filterTickets(ArrayList<Ticket> tickets, JTextArea displayArea) {
+//    Scanner scan = new Scanner(System.in);
+//    displayArea.setText(""); // Clear the text area before displaying
+//
+//    System.out.println("Filter by status: (1) Open, (2) Closed, (3) Resolved");
+//    int option = scan.nextInt();
+//
+//    String status = getStatusFromOption(option);
+//    if (status.isEmpty()) {
+//        System.out.println("Invalid option.");
+//        return;
 //    }
+//
+//    // Call the method to display the filtered tickets
+//    displayFilteredTickets(tickets, status, displayArea);
+//}
     
     public void filterTickets(ArrayList<Ticket> tickets, JTextArea displayArea) {
-    Scanner scan = new Scanner(System.in);
     displayArea.setText(""); // Clear the text area before displaying
 
-    System.out.println("Filter by status: (1) Open, (2) Closed, (3) Resolved");
-    int option = scan.nextInt();
+    // Prompt the user to select a filter option
+    String[] options = {"Open", "Closed", "Resolved"};
+    String selectedOption = (String) JOptionPane.showInputDialog(
+        null,
+        "Filter by status:",
+        "Filter Tickets",
+        JOptionPane.QUESTION_MESSAGE,
+        null,
+        options,
+        options[0]
+    );
 
-    String status = getStatusFromOption(option);
-    if (status.isEmpty()) {
-        System.out.println("Invalid option.");
+    if (selectedOption == null) {
+        // User canceled or closed the dialog
         return;
     }
 
     // Call the method to display the filtered tickets
-    displayFilteredTickets(tickets, status, displayArea);
+    displayFilteredTickets(tickets, selectedOption, displayArea);
 }
+
+
     
     private void displayFilteredTickets(ArrayList<Ticket> tickets, String status, JTextArea displayArea) {
     for (Ticket ticket : tickets) {
@@ -68,19 +73,6 @@ public class TicketSorting {
                 return "";
         }
     }
-
-//    public void sortTickets(ArrayList<Ticket> tickets) {
-//        Scanner scan = new Scanner(System.in);
-//        System.out.println("Sort by: (1) Name Ascending, (2) Name Descending, (3) Date Ascending, (4) Date Descending");
-//        int option = scan.nextInt();
-//
-//        if (!applySortingOption(tickets, option)) {
-//            System.out.println("\n          Invalid option.         \n");
-//            return;
-//        }
-//
-//        displaySortedTickets(tickets);
-//    }
     
     // Method to sort tickets
     public void sortTickets(ArrayList<Ticket> tickets, JTextArea displayArea) {
