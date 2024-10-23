@@ -18,60 +18,78 @@ public class TicketHandle
 {
     private static final String TICKETS_FILE = "tickets.txt";
 
-    public void createTicket(String type) throws IOException
-    {
-        Scanner scan = new Scanner(System.in);
-        System.out.print("            Please fill in Ticket Details.          \n\n");
-        System.out.print("Enter your Name: ");
-        String name = scan.nextLine();
-        System.out.print("Enter your Email: ");
-        String email = scan.nextLine();
-        System.out.print("Enter your Phone: ");
-        String phone = scan.nextLine();
-        System.out.print("Enter Description: ");
-        String description = scan.nextLine();
-        
-        Ticket ticket = null;
-        String ticketNum = generateTicketNum(type); // Generate ticket number based on existing tickets
-        name = capitalizeFirstLetter(name);
-        
-        switch (type)
-        {
-            case "Hardware":
-                System.out.print("Enter the type of Hardware: ");
-                String hardware = scan.nextLine();
-                System.out.print("Enter Model Number of Hardware: ");
-                String model = scan.nextLine();
-                ticket = new HardwareTicket(ticketNum, name, description, email, phone, new Date(), hardware, model);
-                break;
-            case "Software":
-                System.out.print("Enter name of Software: ");
-                String software = scan.nextLine();
-                System.out.print("Enter the current Version of Software: ");
-                String version = scan.nextLine();
-                ticket = new SoftwareTicket(ticketNum, name, description, email, phone, new Date(), software, version);
-                break;
-            case "Network":
-                System.out.print("Enter Network Issue: ");
-                String device = scan.nextLine();
-                System.out.print("Enter IP address: ");
-                String ipAddress = scan.nextLine();
-                ticket = new NetworkTicket(ticketNum, name, description, email, phone, new Date(), device, ipAddress);
-                break;
-        }
+//    public void createTicket(String type) throws IOException
+//    {
+//        Scanner scan = new Scanner(System.in);
+//        System.out.print("            Please fill in Ticket Details.          \n\n");
+//        System.out.print("Enter your Name: ");
+//        String name = scan.nextLine();
+//        System.out.print("Enter your Email: ");
+//        String email = scan.nextLine();
+//        System.out.print("Enter your Phone: ");
+//        String phone = scan.nextLine();
+//        System.out.print("Enter Description: ");
+//        String description = scan.nextLine();
+//        
+//        Ticket ticket = null;
+//        String ticketNum = generateTicketNum(type); // Generate ticket number based on existing tickets
+//        name = capitalizeFirstLetter(name);
+//        
+//        switch (type)
+//        {
+//            case "Hardware":
+//                System.out.print("Enter the type of Hardware: ");
+//                String hardware = scan.nextLine();
+//                System.out.print("Enter Model Number of Hardware: ");
+//                String model = scan.nextLine();
+//                ticket = new HardwareTicket(ticketNum, name, description, email, phone, new Date(), hardware, model);
+//                break;
+//            case "Software":
+//                System.out.print("Enter name of Software: ");
+//                String software = scan.nextLine();
+//                System.out.print("Enter the current Version of Software: ");
+//                String version = scan.nextLine();
+//                ticket = new SoftwareTicket(ticketNum, name, description, email, phone, new Date(), software, version);
+//                break;
+//            case "Network":
+//                System.out.print("Enter Network Issue: ");
+//                String device = scan.nextLine();
+//                System.out.print("Enter IP address: ");
+//                String ipAddress = scan.nextLine();
+//                ticket = new NetworkTicket(ticketNum, name, description, email, phone, new Date(), device, ipAddress);
+//                break;
+//        }
+//
+//        if (ticket != null)
+//        {
+//            saveTicket(ticket);
+//            System.out.println("-----------------------------------------------");
+//            System.out.println("      Ticket created successfully!             ");
+//            System.out.println("-----------------------------------------------\n");
+//
+//            System.out.println("   Thank you for reaching out to us.        ");
+//            System.out.println(" Our team is already reviewing your request,");
+//            System.out.println("  and we will contact you shortly to assist. ");
+//            System.out.println("   Rest assured, we're here to help you.   \n ");
+//        }
+//    }
+    
+    public void createHardwareTicket(String name, String email, String phone, String description, String hardware, String model) throws IOException {
+        String ticketNum = generateTicketNum("Hardware");
+        Ticket ticket = new HardwareTicket(ticketNum, name, description, email, phone, new Date(), hardware, model);
+        saveTicket(ticket);
+    }
 
-        if (ticket != null)
-        {
-            saveTicket(ticket);
-            System.out.println("-----------------------------------------------");
-            System.out.println("      Ticket created successfully!             ");
-            System.out.println("-----------------------------------------------\n");
+    public void createSoftwareTicket(String name, String email, String phone, String description, String software, String version) throws IOException {
+        String ticketNum = generateTicketNum("Software");
+        Ticket ticket = new SoftwareTicket(ticketNum, name, description, email, phone, new Date(), software, version);
+        saveTicket(ticket);
+    }
 
-            System.out.println("   Thank you for reaching out to us.        ");
-            System.out.println(" Our team is already reviewing your request,");
-            System.out.println("  and we will contact you shortly to assist. ");
-            System.out.println("   Rest assured, we're here to help you.   \n ");
-        }
+    public void createNetworkTicket(String name, String email, String phone, String description, String device, String ipAddress) throws IOException {
+        String ticketNum = generateTicketNum("Network");
+        Ticket ticket = new NetworkTicket(ticketNum, name, description, email, phone, new Date(), device, ipAddress);
+        saveTicket(ticket);
     }
 
     private void saveTicket(Ticket ticket) throws IOException
@@ -137,14 +155,6 @@ public class TicketHandle
         return tickets;
     }
 
-//    public void displayTickets(ArrayList<Ticket> tickets)
-//    {
-//        for (Ticket ticket : tickets)
-//        {
-//            // This will call the correct toString() method for each specific Ticket subclass
-//            System.out.println(ticket.toString());
-//        }
-//    }
     
     public void displayTickets(ArrayList<Ticket> tickets, JTextArea displayArea) {
     displayArea.setText(""); // Clear the text area before displaying

@@ -8,18 +8,245 @@ package pekit2;
  *
  * @author Gio Turtal and Jose Laserna
  */
+//import java.io.IOException;
+//import java.util.Scanner;
+
+//public class GuestInterface
+//{
+//    private TicketHandle ticketHandle = new TicketHandle();
+//
+//    public void displayMenu() throws IOException, ClassNotFoundException
+//    {
+//        Scanner scan = new Scanner(System.in);
+//        while (true)
+//        {
+//            System.out.println("===============================================");
+//            System.out.println("        Welcome to the Guest Portal!           ");
+//            System.out.println("===============================================\n");  
+//            System.out.println("Select ticket type to create:");
+//            System.out.println("(1) Hardware");
+//            System.out.println("(2) Software");
+//            System.out.println("(3) Network");
+//            System.out.println("'x' to go back");
+//
+//            String option = scan.nextLine();
+//
+//            if (option.equals("x"))
+//            {
+//                break;
+//            }
+//
+//            switch (option)
+//            {
+//                case "1":
+//                    ticketHandle.createTicket("Hardware");
+//                    break;
+//                case "2":
+//                    ticketHandle.createTicket("Software");
+//                    break;
+//                case "3":
+//                    ticketHandle.createTicket("Network");
+//                    break;
+//                default:
+//                    System.out.println("\n      Invalid option.         \n");
+//            }
+//        }
+//    }
+//}
+
+
+//import java.io.IOException;
+//import java.util.Scanner;
+//
+//public class GuestInterface {
+//    private TicketHandle ticketHandle = new TicketHandle();
+//
+//    public void displayMenu() throws IOException, ClassNotFoundException {
+//        Scanner scan = new Scanner(System.in);
+//        while (true) {
+//            System.out.println("===============================================");
+//            System.out.println("        Welcome to the Guest Portal!           ");
+//            System.out.println("===============================================\n");  
+//            System.out.println("Select ticket type to create:");
+//            System.out.println("(1) Hardware");
+//            System.out.println("(2) Software");
+//            System.out.println("(3) Network");
+//            System.out.println("'x' to go back");
+//
+//            String option = scan.nextLine();
+//
+//            if (option.equals("x")) {
+//                break;
+//            }
+//
+//            switch (option) {
+//                case "1":
+//                    createHardwareTicket(scan);
+//                    break;
+//                case "2":
+//                    createSoftwareTicket(scan);
+//                    break;
+//                case "3":
+//                    createNetworkTicket(scan);
+//                    break;
+//                default:
+//                    System.out.println("\n      Invalid option.         \n");
+//            }
+//        }
+//    }
+//
+//    private void createHardwareTicket(Scanner scan) throws IOException {
+//        System.out.print("Enter your Name: ");
+//        String name = scan.nextLine();
+//        System.out.print("Enter your Email: ");
+//        String email = scan.nextLine();
+//        System.out.print("Enter your Phone: ");
+//        String phone = scan.nextLine();
+//        System.out.print("Enter Description: ");
+//        String description = scan.nextLine();
+//        System.out.print("Enter the type of Hardware: ");
+//        String hardware = scan.nextLine();
+//        System.out.print("Enter Model Number of Hardware: ");
+//        String model = scan.nextLine();
+//
+//        ticketHandle.createHardwareTicket(name, email, phone, description, hardware, model);
+//        System.out.println("Hardware ticket created successfully!");
+//    }
+//
+//    private void createSoftwareTicket(Scanner scan) throws IOException {
+//        System.out.print("Enter your Name: ");
+//        String name = scan.nextLine();
+//        System.out.print("Enter your Email: ");
+//        String email = scan.nextLine();
+//        System.out.print("Enter your Phone: ");
+//        String phone = scan.nextLine();
+//        System.out.print("Enter Description: ");
+//        String description = scan.nextLine();
+//        System.out.print("Enter name of Software: ");
+//        String software = scan.nextLine();
+//        System.out.print("Enter the current Version of Software: ");
+//        String version = scan.nextLine();
+//
+//        ticketHandle.createSoftwareTicket(name, email, phone, description, software, version);
+//        System.out.println("Software ticket created successfully!");
+//    }
+//
+//    private void createNetworkTicket(Scanner scan) throws IOException {
+//        System.out.print("Enter your Name: ");
+//        String name = scan.nextLine();
+//        System.out.print("Enter your Email: ");
+//        String email = scan.nextLine();
+//        System.out.print("Enter your Phone: ");
+//        String phone = scan.nextLine();
+//        System.out.print("Enter Description: ");
+//        String description = scan.nextLine();
+//        System.out.print("Enter Network Issue: ");
+//        String device = scan.nextLine();
+//        System.out.print("Enter IP address: ");
+//        String ipAddress = scan.nextLine();
+//
+//        ticketHandle.createNetworkTicket(name, email, phone, description, device, ipAddress);
+//        System.out.println("Network ticket created successfully!");
+//    }
+//}
+
+import javax.swing.*;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class GuestInterface
-{
+public class GuestInterface extends JFrame {
     private TicketHandle ticketHandle = new TicketHandle();
 
-    public void displayMenu() throws IOException, ClassNotFoundException
-    {
+    public GuestInterface() {
+        // Set up JFrame for Guest Interface
+        setTitle("Guest Ticket Creation");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
+        
+        // Add components for creating a ticket
+        JLabel nameLabel = new JLabel("Enter your Name:");
+        nameLabel.setBounds(20, 20, 150, 25);
+        add(nameLabel);
+
+        JTextField nameField = new JTextField();
+        nameField.setBounds(180, 20, 180, 25);
+        add(nameField);
+
+        JLabel emailLabel = new JLabel("Enter your Email:");
+        emailLabel.setBounds(20, 60, 150, 25);
+        add(emailLabel);
+
+        JTextField emailField = new JTextField();
+        emailField.setBounds(180, 60, 180, 25);
+        add(emailField);
+
+        JLabel phoneLabel = new JLabel("Enter your Phone:");
+        phoneLabel.setBounds(20, 100, 150, 25);
+        add(phoneLabel);
+
+        JTextField phoneField = new JTextField();
+        phoneField.setBounds(180, 100, 180, 25);
+        add(phoneField);
+
+        JLabel descLabel = new JLabel("Enter Description:");
+        descLabel.setBounds(20, 140, 150, 25);
+        add(descLabel);
+
+        JTextField descField = new JTextField();
+        descField.setBounds(180, 140, 180, 25);
+        add(descField);
+
+        JLabel typeLabel = new JLabel("Select Ticket Type:");
+        typeLabel.setBounds(20, 180, 150, 25);
+        add(typeLabel);
+
+        String[] types = {"Hardware", "Software", "Network"};
+        JComboBox<String> typeComboBox = new JComboBox<>(types);
+        typeComboBox.setBounds(180, 180, 180, 25);
+        add(typeComboBox);
+
+        JButton submitButton = new JButton("Submit");
+        submitButton.setBounds(150, 220, 100, 30);
+        add(submitButton);
+
+        submitButton.addActionListener(e -> {
+            // Logic to create and save the ticket using the TicketHandle class
+            String name = nameField.getText();
+            String email = emailField.getText();
+            String phone = phoneField.getText();
+            String description = descField.getText();
+            String type = (String) typeComboBox.getSelectedItem();
+
+            try {
+                switch (type) {
+                    case "Hardware":
+                        String hardware = JOptionPane.showInputDialog("Enter the type of Hardware:");
+                        String model = JOptionPane.showInputDialog("Enter Model Number of Hardware:");
+                        ticketHandle.createHardwareTicket(name, email, phone, description, hardware, model);
+                        break;
+                    case "Software":
+                        String software = JOptionPane.showInputDialog("Enter name of Software:");
+                        String version = JOptionPane.showInputDialog("Enter the current Version of Software:");
+                        ticketHandle.createSoftwareTicket(name, email, phone, description, software, version);
+                        break;
+                    case "Network":
+                        String device = JOptionPane.showInputDialog("Enter Network Issue:");
+                        String ipAddress = JOptionPane.showInputDialog("Enter IP address:");
+                        ticketHandle.createNetworkTicket(name, email, phone, description, device, ipAddress);
+                        break;
+                }
+                JOptionPane.showMessageDialog(this, "Ticket Created Successfully!");
+                this.dispose(); // Close the frame after submission
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error creating ticket: " + ex.getMessage());
+            }
+        });
+    }
+    
+    public void displayMenu() throws IOException, ClassNotFoundException {
         Scanner scan = new Scanner(System.in);
-        while (true)
-        {
+        while (true) {
             System.out.println("===============================================");
             System.out.println("        Welcome to the Guest Portal!           ");
             System.out.println("===============================================\n");  
@@ -31,25 +258,17 @@ public class GuestInterface
 
             String option = scan.nextLine();
 
-            if (option.equals("x"))
-            {
+            if (option.equals("x")) {
                 break;
-            }
-
-            switch (option)
-            {
-                case "1":
-                    ticketHandle.createTicket("Hardware");
-                    break;
-                case "2":
-                    ticketHandle.createTicket("Software");
-                    break;
-                case "3":
-                    ticketHandle.createTicket("Network");
-                    break;
-                default:
-                    System.out.println("\n      Invalid option.         \n");
             }
         }
     }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            GuestInterface guestInterface = new GuestInterface();
+            guestInterface.setVisible(true);
+        });
+    }
 }
+
