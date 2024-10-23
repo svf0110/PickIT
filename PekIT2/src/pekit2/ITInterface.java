@@ -45,8 +45,25 @@ public class ITInterface {
                 case "1":
                     ticketHandle.displayTickets(tickets, ticketDisplayArea); // Pass the JTextArea
                     break;
-                case "2":
-                    ticketSorting.filterTickets(tickets, ticketDisplayArea); // Pass the JTextArea
+//                case "2":
+//                    ticketSorting.filterTickets(tickets, ticketDisplayArea); // Pass the JTextArea
+//                    break;
+                    case "2":
+                    // Prompt the user for filter type
+                    String[] filterOptions = {"All", "Hardware", "Software", "Network"};
+                    String filterType = (String) JOptionPane.showInputDialog(
+                        null,
+                        "Select filter type:",
+                        "Filter Tickets",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        filterOptions,
+                        filterOptions[0] // Default selection
+                    );
+
+                    if (filterType != null) { // Check if the user didn't cancel the dialog
+                        ticketSorting.filterTickets(tickets, ticketDisplayArea, filterType); // Pass the JTextArea and filter type
+                    }
                     break;
                 case "3":
                     ticketSorting.sortTickets(tickets, ticketDisplayArea); // Update this if necessary

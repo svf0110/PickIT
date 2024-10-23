@@ -22,6 +22,19 @@ public class SoftwareTicket extends Ticket
         this.software = software;
         this.version = version;
     }
+    
+     @Override
+    public String getType() {
+        return "Software";
+    }
+    
+    public String getSoftware() {
+        return software;
+    }
+
+    public String getVersion() {
+        return version;
+    }
 
     @Override
     public String toFileString()

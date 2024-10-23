@@ -9,7 +9,5 @@ H002,Maria lopez,maria.lopez@gmail.com,021-123-4567,Monitor is flickering causin
 H001,Roberto ramirez,roberto2@gmail.com,022-537-7789,Computer is Overheating (PC is Shutting Down),1724989312214,Desktop,Work PC-2345
 H010,Jeffrey,Dahmer,034-456-9876,My Computer is broken,1729562623414,,HW-5003
 H011,Gio Turtal,turtle12@gmail.com,0192831032,Fone Broken,1729642754113,Fone,1234
-H012,,,,,1729642765023,null,null
-H013,Liam,Clark,1-238123,Iphone broke,1729647373395,Iphone ,16
-H014,Saahil Singh,saahil2@gmail.com,01927381,Hello,1729647936169,null,null
-S015,Bobby,aowid,adawd,awdadw,1729654245307,awdawd,awdawd
+H012,Harry Potter,nineandthreequarters@gmail.com,01928308098,Phone is broken,1729670390588,Iphone,13
+H013,zombie,zombie@email.com,012938132,rawr,1729671718104,fone brok,fone

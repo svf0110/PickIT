@@ -21,6 +21,19 @@ public class NetworkTicket extends Ticket
         this.device = device;
         this.ipAddress = ipAddress;
     }
+    
+    @Override
+    public String getType() {
+        return "Network";
+    }
+    
+    public String getDevice() {
+        return device;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
 
     @Override
     public String toFileString()

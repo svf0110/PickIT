@@ -21,6 +21,12 @@ public class HardwareTicket extends Ticket
         this.hardware = hardware;
         this.model = model;
     }
+    
+    @Override
+    public String getType() {
+        return "Hardware";
+    }
+    
 
     @Override
     public String toFileString()

@@ -9,17 +9,19 @@ package pekit2;
  * @author jmrla
  */
 
+import java.awt.Color;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class ITInterfaceGUI extends JFrame {
     private TicketHandle ticketHandle;
     private TicketSorting ticketSorting;
-    private JTextArea ticketDisplayArea;
+    private JTable ticketTable;
+    private DefaultTableModel tableModel;
 
     public ITInterfaceGUI() {
         ticketHandle = new TicketHandle();
@@ -27,33 +29,41 @@ public class ITInterfaceGUI extends JFrame {
 
         // Set up JFrame
         setTitle("IT Staff Menu");
-        setSize(600, 400);
+        setSize(1000, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
-        // Create a JTextArea for displaying tickets
-        ticketDisplayArea = new JTextArea();
-        ticketDisplayArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(ticketDisplayArea);
-        scrollPane.setBounds(20, 20, 350, 300); // Adjust size and position as needed
-        add(scrollPane);
+        // Create a light green background panel for the form
+        JPanel formPanel = new JPanel();
+        formPanel.setBounds(0, 0, 1000, 600);
+        formPanel.setLayout(null);
+        formPanel.setBackground(new Color(174, 255, 173)); // Light green background
+        add(formPanel);
+
+        // Create a JTable to display tickets
+        String[] columnNames = {"Name", "Email", "Phone", "Description", "Type", "Details"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+        ticketTable = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(ticketTable);
+        scrollPane.setBounds(20, 150, 950, 400); // Adjust size and position as needed
+        formPanel.add(scrollPane);
 
         // Buttons for IT staff actions
-        JButton viewTicketsButton = new JButton("View Tickets");
-        viewTicketsButton.setBounds(400, 50, 150, 30);
-        add(viewTicketsButton);
+        JButton viewTicketsButton = new JButton("View All Tickets");
+        viewTicketsButton.setBounds(20, 20, 150, 40);
+        formPanel.add(viewTicketsButton);
 
-        JButton createTicketButton = new JButton("Create Ticket");
-        createTicketButton.setBounds(400, 100, 150, 30);
-        add(createTicketButton);
+        JButton createTicketButton = new JButton("Create Guest Ticket");
+        createTicketButton.setBounds(180, 20, 150, 40);
+        formPanel.add(createTicketButton);
 
         JButton sortTicketsButton = new JButton("Sort Tickets");
-        sortTicketsButton.setBounds(400, 150, 150, 30);
-        add(sortTicketsButton);
+        sortTicketsButton.setBounds(340, 20, 150, 40);
+        formPanel.add(sortTicketsButton);
 
         JButton filterTicketsButton = new JButton("Filter Tickets");
-        filterTicketsButton.setBounds(400, 200, 150, 30);
-        add(filterTicketsButton);
+        filterTicketsButton.setBounds(500, 20, 150, 40);
+        formPanel.add(filterTicketsButton);
 
         // Add button listeners
         viewTicketsButton.addActionListener(new ActionListener() {
@@ -61,119 +71,12 @@ public class ITInterfaceGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     ArrayList<Ticket> tickets = ticketHandle.loadTickets();
-                    ticketDisplayArea.setText(""); // Clear the text area
-                    ticketHandle.displayTickets(tickets, ticketDisplayArea);
+                    displayTicketsInTable(tickets);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(null, "Error loading tickets.");
                 }
             }
         });
-
-    createTicketButton.addActionListener(new ActionListener() { 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        try {
-            String[] types = {"Hardware", "Software", "Network"};
-            String type = (String) JOptionPane.showInputDialog(null, "Select ticket type:", "Ticket Type",
-                    JOptionPane.QUESTION_MESSAGE, null, types, types[0]);
-
-            if (type != null) {
-                // Create a new Scanner object for user input
-                Scanner scan = new Scanner(System.in);
-                
-                switch (type) {
-                    case "Hardware":
-                        createHardwareTicket(scan);
-                        break;
-                    case "Software":
-                        createSoftwareTicket(scan);
-                        break;
-                    case "Network":
-                        createNetworkTicket(scan);
-                        break;
-                    default:
-                        JOptionPane.showMessageDialog(null, "Invalid ticket type selected.");
-                }
-            }
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error creating ticket.");
-        }
-    }
-
-    private void createHardwareTicket(Scanner scan) throws IOException {
-        // Gather hardware ticket details from user
-        String name = JOptionPane.showInputDialog("Enter your Name:");
-        String email = JOptionPane.showInputDialog("Enter your Email:");
-        String phone = JOptionPane.showInputDialog("Enter your Phone:");
-        String description = JOptionPane.showInputDialog("Enter Description:");
-        String hardware = JOptionPane.showInputDialog("Enter the type of Hardware:");
-        String model = JOptionPane.showInputDialog("Enter Model Number of Hardware:");
-
-        ticketHandle.createHardwareTicket(name, email, phone, description, hardware, model);
-        JOptionPane.showMessageDialog(null, "Hardware ticket created successfully!");
-    }
-
-    private void createSoftwareTicket(Scanner scan) throws IOException {
-        // Gather software ticket details from user
-        String name = JOptionPane.showInputDialog("Enter your Name:");
-        String email = JOptionPane.showInputDialog("Enter your Email:");
-        String phone = JOptionPane.showInputDialog("Enter your Phone:");
-        String description = JOptionPane.showInputDialog("Enter Description:");
-        String software = JOptionPane.showInputDialog("Enter name of Software:");
-        String version = JOptionPane.showInputDialog("Enter the current Version of Software:");
-
-        ticketHandle.createSoftwareTicket(name, email, phone, description, software, version);
-        JOptionPane.showMessageDialog(null, "Software ticket created successfully!");
-    }
-
-    private void createNetworkTicket(Scanner scan) throws IOException {
-        // Gather network ticket details from user
-        String name = JOptionPane.showInputDialog("Enter your Name:");
-        String email = JOptionPane.showInputDialog("Enter your Email:");
-        String phone = JOptionPane.showInputDialog("Enter your Phone:");
-        String description = JOptionPane.showInputDialog("Enter Description:");
-        String device = JOptionPane.showInputDialog("Enter Network Issue:");
-        String ipAddress = JOptionPane.showInputDialog("Enter IP address:");
-
-        ticketHandle.createNetworkTicket(name, email, phone, description, device, ipAddress);
-        JOptionPane.showMessageDialog(null, "Network ticket created successfully!");
-    }
-});
-
-
-        sortTicketsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    ArrayList<Ticket> tickets = ticketHandle.loadTickets();
-                    // Assuming sortTickets takes (ArrayList<Ticket>, JTextArea) as parameters
-                    ticketSorting.sortTickets(tickets, ticketDisplayArea);
-                    ticketDisplayArea.setText("");
-                    ticketHandle.displayTickets(tickets, ticketDisplayArea);
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, "Error sorting tickets.");
-                }
-            }
-        });
-
-        filterTicketsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    ArrayList<Ticket> tickets = ticketHandle.loadTickets();
-                    String status = JOptionPane.showInputDialog(null, "Enter status to filter (e.g., Open, Closed):");
-                    if (status != null && !status.isEmpty()) {
-                        // Assuming filterTickets takes (ArrayList<Ticket>, JTextArea, String) as parameters
-                        ticketSorting.filterTickets(tickets, ticketDisplayArea);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Invalid status input.");
-                    }
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, "Error filtering tickets.");
-                }
-            }
-        });
-    
 
         createTicketButton.addActionListener(new ActionListener() {
             @Override
@@ -240,23 +143,28 @@ public class ITInterfaceGUI extends JFrame {
                         String type = (String) typeComboBox.getSelectedItem();
 
                         try {
+                            String details = "";
                             switch (type) {
                                 case "Hardware":
                                     String hardware = JOptionPane.showInputDialog("Enter the type of Hardware:");
                                     String model = JOptionPane.showInputDialog("Enter Model Number of Hardware:");
+                                    details = "Hardware: " + hardware + ", Model: " + model;
                                     ticketHandle.createHardwareTicket(name, email, phone, description, hardware, model);
                                     break;
                                 case "Software":
                                     String software = JOptionPane.showInputDialog("Enter name of Software:");
                                     String version = JOptionPane.showInputDialog("Enter the current Version of Software:");
+                                    details = "Software: " + software + ", Version: " + version;
                                     ticketHandle.createSoftwareTicket(name, email, phone, description, software, version);
                                     break;
                                 case "Network":
                                     String device = JOptionPane.showInputDialog("Enter Network Issue:");
                                     String ipAddress = JOptionPane.showInputDialog("Enter IP address:");
+                                    details = "Device: " + device + ", IP: " + ipAddress;
                                     ticketHandle.createNetworkTicket(name, email, phone, description, device, ipAddress);
                                     break;
                             }
+                            addTicketToTable(name, email, phone, description, type, details);
                             JOptionPane.showMessageDialog(createTicketFrame, "Ticket Created Successfully!");
                             createTicketFrame.dispose(); // Close the frame after submission
                         } catch (IOException ex) {
@@ -268,6 +176,65 @@ public class ITInterfaceGUI extends JFrame {
                 createTicketFrame.setVisible(true);
             }
         });
+        
+        // Inside the ITInterfaceGUI constructor
+sortTicketsButton.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            ArrayList<Ticket> tickets = ticketHandle.loadTickets();
+            String criteria = JOptionPane.showInputDialog("Sort by: (name/date)");
+            if ("name".equalsIgnoreCase(criteria)) {
+                tickets = ticketSorting.sortByName(tickets);
+            } else if ("date".equalsIgnoreCase(criteria)) {
+                tickets = ticketSorting.sortByDate(tickets);
+            }
+            displayTicketsInTable(tickets);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error loading tickets.");
+        }
+    }
+});
+
+        filterTicketsButton.addActionListener(new ActionListener() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String filterType = (String) JOptionPane.showInputDialog(null, "Select ticket type to filter:",
+                "Filter Tickets", JOptionPane.QUESTION_MESSAGE, null, new String[]{"Hardware", "Software", "Network"}, "Hardware");
+        try {
+            ArrayList<Ticket> tickets = ticketHandle.loadTickets();
+            ArrayList<Ticket> filteredTickets = ticketHandle.filterTicketsByType(tickets, filterType);
+            displayTicketsInTable(filteredTickets);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Error loading tickets.");
+        }
+    }
+});
+
+
+        
+}
+
+    private void displayTicketsInTable(ArrayList<Ticket> tickets) {
+        // Clear existing rows
+        tableModel.setRowCount(0);
+        for (Ticket ticket : tickets) {
+            // Assuming Ticket class has getName(), getEmail(), getPhone(), getDescription(), getType(), and getDetails() methods
+            Object[] rowData = {
+                ticket.getName(),
+                ticket.getEmail(),
+                ticket.getPhone(),
+                ticket.getDescription(),
+                ticket.getType(),
+                ticket.getDetails()
+            };
+            tableModel.addRow(rowData);
+        }
+    }
+
+    private void addTicketToTable(String name, String email, String phone, String description, String type, String details) {
+        Object[] rowData = {name, email, phone, description, type, details};
+        tableModel.addRow(rowData);
     }
 
     public static void main(String[] args) {
@@ -275,4 +242,3 @@ public class ITInterfaceGUI extends JFrame {
         itInterface.setVisible(true);
     }
 }
-

@@ -19,6 +19,7 @@ public abstract class Ticket
     protected String phone;
     protected Date creationDate;
     protected String status;
+    protected String details;
     
     public Ticket(String ticketNum, String name, String description, String email, String phone, Date creationDate)
     {
@@ -30,7 +31,19 @@ public abstract class Ticket
         this.creationDate = creationDate;
         this.status = "Open"; // Default status
     }
+    
+    public abstract String getType();
+    
+    
+    public String getDetails() {
+        return details;
+    }
 
+    // Add this method to provide details when needed
+    public void setDetails(String details) {
+        this.details = details;
+    }
+    
     public String getTicketNum()
     {
         return ticketNum;
