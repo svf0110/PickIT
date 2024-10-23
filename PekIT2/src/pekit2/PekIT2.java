@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Scanner;
+import javax.swing.SwingUtilities;
 
 public class PekIT2
 {
@@ -24,7 +25,9 @@ public class PekIT2
         ticketHandle.checkTicketsTable();
         accountHandle.createAccountsTable();
         
-        
+        SwingUtilities.invokeLater(() -> {
+            new TicketTableGUI();  // This will call the GUI and display the ticket table
+        });
         
         try (Connection conn = DBConnection.connect()) {
             if (conn != null) 

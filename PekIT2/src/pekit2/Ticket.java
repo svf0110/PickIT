@@ -10,8 +10,7 @@ package pekit2;
  */
 import java.util.Date;
 
-public abstract class Ticket
-{
+public abstract class Ticket {
     protected String ticketNum;
     protected String name;
     protected String description;
@@ -19,9 +18,9 @@ public abstract class Ticket
     protected String phone;
     protected Date creationDate;
     protected String status;
+    protected String priority; // New field for priority
 
-    public Ticket(String ticketNum, String name, String description, String email, String phone, Date creationDate)
-    {
+    public Ticket(String ticketNum, String name, String description, String email, String phone, Date creationDate, String priority) {
         this.ticketNum = ticketNum;
         this.name = name;
         this.description = description;
@@ -29,51 +28,50 @@ public abstract class Ticket
         this.phone = phone;
         this.creationDate = creationDate;
         this.status = "Open"; // Default status
+        this.priority = priority; // Set priority
     }
 
-    public String getTicketNum()
-    {
+    public String getTicketNum() {
         return ticketNum;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-    public String getPhone()
-    {
+    public String getPhone() {
         return phone;
     }
 
-    public Date getCreationDate()
-    {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public String getStatus()
-    {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status)
-    {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public String toFileString()
-    {
-        return String.format("%s,%s,%s,%s,%s,%d",
-                getTicketNum(), getName(), getEmail(), getPhone(), getDescription(), getCreationDate().getTime());
+    public String getPriority() { // Getter for priority
+        return priority;
+    }
+
+    public void setPriority(String priority) { // Setter for priority
+        this.priority = priority;
+    }
+
+    public String toFileString() {
+        return String.format("%s,%s,%s,%s,%s,%d,%s", getTicketNum(), getName(), getEmail(), getPhone(), getDescription(), getCreationDate().getTime(), getPriority());
     }
 }

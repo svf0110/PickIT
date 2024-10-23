@@ -18,15 +18,14 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class TicketHandle
-{
-    private static final String TICKETS_FILE = "tickets.txt";
+public class TicketHandle {
 
     public void checkTicketsTable() throws SQLException {
         String sql = "CREATE TABLE tickets ("
                 + "ticketNum VARCHAR(10) PRIMARY KEY, "
                 + "name VARCHAR(255), description VARCHAR(1000), email VARCHAR(255), "
                 + "phone VARCHAR(20), creationDate TIMESTAMP, status VARCHAR(20), "
+                + "priority VARCHAR(20), " // Added priority column
                 + "type VARCHAR(20), extraField1 VARCHAR(255), extraField2 VARCHAR(255))";
 
         try (Connection conn = DBConnection.connect(); Statement stmt = conn.createStatement()) {
@@ -45,9 +44,7 @@ public class TicketHandle
         }
     }
 
-
-    public void createTicket(String type) throws IOException, SQLException
-    {
+    public void createTicket(String type) throws IOException, SQLException {
         Scanner scan = new Scanner(System.in);
         System.out.print("            Please fill in Ticket Details.          \n\n");
         System.out.print("Enter your Name: ");
@@ -58,39 +55,63 @@ public class TicketHandle
         String phone = scan.nextLine();
         System.out.print("Enter Description: ");
         String description = scan.nextLine();
+        
+        String priority = "";
+        while (true) {
+            System.out.println("Enter Priority: ");
+            System.out.println("(1) Low\n(2) Medium\n(3) High\n(4) Critical");
+            String priorityChoice = scan.nextLine();
+
+            switch (priorityChoice) {
+                case "1":
+                    priority = "Low";
+                    break;
+                case "2":
+                    priority = "Medium";
+                    break;
+                case "3":
+                    priority = "High";
+                    break;
+                case "4":
+                    priority = "Critical";
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select a valid priority (1-4).");
+                    continue; // If invalid, prompt user again
+            }
+            break; // Exit the loop once a valid priority is selected
+        }
 
         Ticket ticket = null;
         String ticketNum = generateTicketNum(type); // Generate ticket number based on existing tickets
-        
+
         name = capitalizeFirstLetter(name);
-        
-        switch (type)
-        {
+
+        switch (type) {
             case "Hardware":
                 System.out.print("Enter the type of Hardware: ");
                 String hardware = scan.nextLine();
                 System.out.print("Enter Model Number of Hardware: ");
                 String model = scan.nextLine();
-                ticket = new HardwareTicket(ticketNum, name, description, email, phone, new Date(), hardware, model);
+                ticket = new HardwareTicket(ticketNum, name, description, email, phone, new Date(), priority, hardware, model);
                 break;
             case "Software":
                 System.out.print("Enter name of Software: ");
                 String software = scan.nextLine();
                 System.out.print("Enter the current Version of Software: ");
                 String version = scan.nextLine();
-                ticket = new SoftwareTicket(ticketNum, name, description, email, phone, new Date(), software, version);
+                ticket = new SoftwareTicket(ticketNum, name, description, email, phone, new Date(), priority, software, version);
                 break;
             case "Network":
                 System.out.print("Enter Network Issue: ");
                 String device = scan.nextLine();
                 System.out.print("Enter IP address: ");
                 String ipAddress = scan.nextLine();
-                ticket = new NetworkTicket(ticketNum, name, description, email, phone, new Date(), device, ipAddress);
+                ticket = new NetworkTicket(ticketNum, name, description, email, phone, new Date(), priority, device, ipAddress);
                 break;
         }
 
-        if (ticket != null)
-        {
+        if (ticket != null) {
             saveTicket(ticket);
             System.out.println("-----------------------------------------------");
             System.out.println("      Ticket created successfully!             ");
@@ -103,12 +124,10 @@ public class TicketHandle
         }
     }
 
-    private void saveTicket(Ticket ticket) throws SQLException 
-    {
-        String sql = "INSERT INTO tickets (ticketNum, name, description, email, phone, creationDate, status, type, extraField1, extraField2) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DBConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) 
-        {
+    private void saveTicket(Ticket ticket) throws SQLException {
+        String sql = "INSERT INTO tickets (ticketNum, name, description, email, phone, creationDate, status, priority, type, extraField1, extraField2) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, ticket.getTicketNum());
             pstmt.setString(2, ticket.getName());
             pstmt.setString(3, ticket.getDescription());
@@ -116,36 +135,39 @@ public class TicketHandle
             pstmt.setString(5, ticket.getPhone());
             pstmt.setTimestamp(6, new java.sql.Timestamp(ticket.getCreationDate().getTime()));
             pstmt.setString(7, ticket.getStatus());
-            pstmt.setString(8, ticket.getClass().getSimpleName());
+            pstmt.setString(8, ticket.getPriority()); // Save priority
+            pstmt.setString(9, ticket.getClass().getSimpleName());
             if (ticket instanceof SoftwareTicket) {
                 SoftwareTicket st = (SoftwareTicket) ticket;
-                pstmt.setString(9, st.getSoftware());
-                pstmt.setString(10, st.getVersion());
+                pstmt.setString(10, st.getSoftware());
+                pstmt.setString(11, st.getVersion());
             } else if (ticket instanceof HardwareTicket) {
                 HardwareTicket ht = (HardwareTicket) ticket;
-                pstmt.setString(9, ht.getHardware());
-                pstmt.setString(10, ht.getModel());
+                pstmt.setString(10, ht.getHardware());
+                pstmt.setString(11, ht.getModel());
             } else if (ticket instanceof NetworkTicket) {
                 NetworkTicket nt = (NetworkTicket) ticket;
-                pstmt.setString(9, nt.getDevice());
-                pstmt.setString(10, nt.getIpAddress());
+                pstmt.setString(10, nt.getDevice());
+                pstmt.setString(11, nt.getIpAddress());
             } else {
-                pstmt.setString(9, null);
                 pstmt.setString(10, null);
+                pstmt.setString(11, null);
             }
             pstmt.executeUpdate();
         }
     }
 
+    // Other methods (loadTickets, displayTickets, deleteTicket, editTicket) 
+    // will also be updated to handle the `priority` field similarly, including it in all operations.
+
+
     //THIS MIGHT NOT EVEN BE USED!!!!!!!
-    public ArrayList<Ticket> loadTickets() throws SQLException 
-    {
+    public ArrayList<Ticket> loadTickets() throws SQLException {
+        
         ArrayList<Ticket> tickets = new ArrayList<>();
         String sql = "SELECT * FROM tickets";
-        try (Connection conn = DBConnection.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) 
-        {
-            while (rs.next()) 
-            {
+        try (Connection conn = DBConnection.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
                 String ticketNum = rs.getString("ticketNum");
                 String name = rs.getString("name");
                 String email = rs.getString("email");
@@ -154,28 +176,23 @@ public class TicketHandle
                 Date creationDate = new Date(rs.getTimestamp("creationDate").getTime());
                 String status = rs.getString("status");
                 String type = rs.getString("type");
+                String priority = rs.getString("priority");  // Fetch the priority field
 
                 Ticket ticket = null;
-                if ("SoftwareTicket".equals(type)) 
-                {
+                if ("SoftwareTicket".equals(type)) {
                     String software = rs.getString("extraField1");
                     String version = rs.getString("extraField2");
-                    ticket = new SoftwareTicket(ticketNum, name, description, email, phone, creationDate, software, version);
-                } 
-                else if ("HardwareTicket".equals(type)) 
-                {
+                    ticket = new SoftwareTicket(ticketNum, name, description, email, phone, creationDate, priority, software, version);
+                } else if ("HardwareTicket".equals(type)) {
                     String hardware = rs.getString("extraField1");
                     String model = rs.getString("extraField2");
-                    ticket = new HardwareTicket(ticketNum, name, description, email, phone, creationDate, hardware, model);
-                } 
-                else if ("NetworkTicket".equals(type)) 
-                {
+                    ticket = new HardwareTicket(ticketNum, name, description, email, phone, creationDate, priority, hardware, model);
+                } else if ("NetworkTicket".equals(type)) {
                     String device = rs.getString("extraField1");
                     String ipAddress = rs.getString("extraField2");
-                    ticket = new NetworkTicket(ticketNum, name, description, email, phone, creationDate, device, ipAddress);
+                    ticket = new NetworkTicket(ticketNum, name, description, email, phone, creationDate, priority, device, ipAddress);
                 }
-                if (ticket != null) 
-                {
+                if (ticket != null) {
                     tickets.add(ticket);
                 }
             }
@@ -184,12 +201,11 @@ public class TicketHandle
     }
 
 
-    public void displayTickets() throws SQLException 
-    {
+
+    public void displayTickets() throws SQLException {
         String sql = "SELECT * FROM tickets";
 
-        try (Connection conn = DBConnection.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) 
-        {
+        try (Connection conn = DBConnection.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             // Iterate through the result set
             while (rs.next()) {
                 String ticketNum = rs.getString("ticketNum");
@@ -200,6 +216,7 @@ public class TicketHandle
                 Date creationDate = new Date(rs.getTimestamp("creationDate").getTime());
                 String status = rs.getString("status");
                 String type = rs.getString("type");
+                String priority = rs.getString("priority");  // Fetch the priority field
 
                 Ticket ticket = null;
 
@@ -207,24 +224,19 @@ public class TicketHandle
                 if ("SoftwareTicket".equals(type)) {
                     String software = rs.getString("extraField1");
                     String version = rs.getString("extraField2");
-                    ticket = new SoftwareTicket(ticketNum, name, description, email, phone, creationDate, software, version);
-                } 
-                else if ("HardwareTicket".equals(type)) 
-                {
+                    ticket = new SoftwareTicket(ticketNum, name, description, email, phone, creationDate, priority, software, version);
+                } else if ("HardwareTicket".equals(type)) {
                     String hardware = rs.getString("extraField1");
                     String model = rs.getString("extraField2");
-                    ticket = new HardwareTicket(ticketNum, name, description, email, phone, creationDate, hardware, model);
-                } 
-                else if ("NetworkTicket".equals(type)) 
-                {
+                    ticket = new HardwareTicket(ticketNum, name, description, email, phone, creationDate, priority, hardware, model);
+                } else if ("NetworkTicket".equals(type)) {
                     String device = rs.getString("extraField1");
                     String ipAddress = rs.getString("extraField2");
-                    ticket = new NetworkTicket(ticketNum, name, description, email, phone, creationDate, device, ipAddress);
+                    ticket = new NetworkTicket(ticketNum, name, description, email, phone, creationDate, priority, device, ipAddress);
                 }
 
                 // Print the ticket details
-                if (ticket != null) 
-                {
+                if (ticket != null) {
                     System.out.println(ticket.toString());
                 }
             }

@@ -10,57 +10,41 @@ package pekit2;
  */
 import java.util.Date;
 
-public class HardwareTicket extends Ticket
+public class HardwareTicket extends Ticket 
 {
-
-    /**
-     * @return the hardware
-     */
-    public String getHardware() {
-        return hardware;
-    }
-
-    /**
-     * @param hardware the hardware to set
-     */
-    public void setHardware(String hardware) {
-        this.hardware = hardware;
-    }
-
-    /**
-     * @return the model
-     */
-    public String getModel() {
-        return model;
-    }
-
-    /**
-     * @param model the model to set
-     */
-    public void setModel(String model) {
-        this.model = model;
-    }
     private String hardware;
     private String model;
 
-    public HardwareTicket(String ticketNum, String name, String description, String email, String phone, Date creationDate, String hardware, String model)
-    {
-        super(ticketNum, name, description, email, phone, creationDate);
+    public HardwareTicket(String ticketNum, String name, String description, String email, String phone, Date creationDate, String priority, String hardware, String model) {
+        super(ticketNum, name, description, email, phone, creationDate, priority);
         this.hardware = hardware;
         this.model = model;
     }
 
     @Override
-    public String toFileString()
-    {
+    public String toFileString() {
         return super.toFileString() + String.format(",%s,%s", getHardware(), getModel());
     }
 
     @Override
-    public String toString()
-    {
-        return String.format("HardwareTicket [TicketNumber: %s, Name: %s, Status: %s, Hardware: %s, Model: %s, Description: %s]",
-                getTicketNum(), getName(), getStatus(), getHardware(), getModel(), getDescription());
+    public String toString() {
+        return String.format("HardwareTicket [TicketNumber: %s, Name: %s, Status: %s, Priority: %s, Hardware: %s, Model: %s, Description: %s]",
+                getTicketNum(), getName(), getStatus(), getPriority(), getHardware(), getModel(), getDescription());
     }
 
+    public String getHardware() {
+        return hardware;
+    }
+
+    public void setHardware(String hardware) {
+        this.hardware = hardware;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
 }
