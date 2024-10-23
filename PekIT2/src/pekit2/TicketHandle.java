@@ -8,45 +8,16 @@ package pekit2;
  *
  * @author Gio Turtal and Jose Laserna
  */
-import java.sql.Statement;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 public class TicketHandle
 {
     private static final String TICKETS_FILE = "tickets.txt";
 
-    public void checkTicketsTable() throws SQLException {
-        String sql = "CREATE TABLE tickets ("
-                + "ticketNum VARCHAR(10) PRIMARY KEY, "
-                + "name VARCHAR(255), description VARCHAR(1000), email VARCHAR(255), "
-                + "phone VARCHAR(20), creationDate TIMESTAMP, status VARCHAR(20), "
-                + "type VARCHAR(20), extraField1 VARCHAR(255), extraField2 VARCHAR(255))";
-
-        try (Connection conn = DBConnection.connect(); Statement stmt = conn.createStatement()) {
-
-            stmt.executeUpdate(sql);
-            System.out.println("TICKETS table created successfully.");
-
-        } catch (SQLException e) {
-            // Check if the error is because the table already exists
-            if (e.getSQLState().equals("X0Y32")) {
-                System.out.println("TICKETS table already exists, skipping creation.");
-            } else {
-                // Re-throw the exception if it's some other issue
-                throw e;
-            }
-        }
-    }
-
-
-    public void createTicket(String type) throws IOException, SQLException
+    public void createTicket(String type) throws IOException
     {
         Scanner scan = new Scanner(System.in);
         System.out.print("            Please fill in Ticket Details.          \n\n");
@@ -103,255 +74,159 @@ public class TicketHandle
         }
     }
 
-    private void saveTicket(Ticket ticket) throws SQLException 
+    private void saveTicket(Ticket ticket) throws IOException
     {
-        String sql = "INSERT INTO tickets (ticketNum, name, description, email, phone, creationDate, status, type, extraField1, extraField2) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DBConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) 
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(TICKETS_FILE, true)))
         {
-            pstmt.setString(1, ticket.getTicketNum());
-            pstmt.setString(2, ticket.getName());
-            pstmt.setString(3, ticket.getDescription());
-            pstmt.setString(4, ticket.getEmail());
-            pstmt.setString(5, ticket.getPhone());
-            pstmt.setTimestamp(6, new java.sql.Timestamp(ticket.getCreationDate().getTime()));
-            pstmt.setString(7, ticket.getStatus());
-            pstmt.setString(8, ticket.getClass().getSimpleName());
-            if (ticket instanceof SoftwareTicket) {
-                SoftwareTicket st = (SoftwareTicket) ticket;
-                pstmt.setString(9, st.getSoftware());
-                pstmt.setString(10, st.getVersion());
-            } else if (ticket instanceof HardwareTicket) {
-                HardwareTicket ht = (HardwareTicket) ticket;
-                pstmt.setString(9, ht.getHardware());
-                pstmt.setString(10, ht.getModel());
-            } else if (ticket instanceof NetworkTicket) {
-                NetworkTicket nt = (NetworkTicket) ticket;
-                pstmt.setString(9, nt.getDevice());
-                pstmt.setString(10, nt.getIpAddress());
-            } else {
-                pstmt.setString(9, null);
-                pstmt.setString(10, null);
-            }
-            pstmt.executeUpdate();
+            writer.write(ticket.toFileString()); // Assuming Ticket has a toFileString method that formats its data for file writing
+            writer.newLine();
         }
     }
 
-    //THIS MIGHT NOT EVEN BE USED!!!!!!!
-    public ArrayList<Ticket> loadTickets() throws SQLException 
+    public ArrayList<Ticket> loadTickets() throws IOException
     {
         ArrayList<Ticket> tickets = new ArrayList<>();
-        String sql = "SELECT * FROM tickets";
-        try (Connection conn = DBConnection.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) 
+        File file = new File(TICKETS_FILE);
+        if (!file.exists())
         {
-            while (rs.next()) 
-            {
-                String ticketNum = rs.getString("ticketNum");
-                String name = rs.getString("name");
-                String email = rs.getString("email");
-                String phone = rs.getString("phone");
-                String description = rs.getString("description");
-                Date creationDate = new Date(rs.getTimestamp("creationDate").getTime());
-                String status = rs.getString("status");
-                String type = rs.getString("type");
+            return tickets;
+        }
 
-                Ticket ticket = null;
-                if ("SoftwareTicket".equals(type)) 
+        try (BufferedReader reader = new BufferedReader(new FileReader(file)))
+        {
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                String[] parts = line.split(",");
+                if (parts.length >= 6)
                 {
-                    String software = rs.getString("extraField1");
-                    String version = rs.getString("extraField2");
-                    ticket = new SoftwareTicket(ticketNum, name, description, email, phone, creationDate, software, version);
-                } 
-                else if ("HardwareTicket".equals(type)) 
-                {
-                    String hardware = rs.getString("extraField1");
-                    String model = rs.getString("extraField2");
-                    ticket = new HardwareTicket(ticketNum, name, description, email, phone, creationDate, hardware, model);
-                } 
-                else if ("NetworkTicket".equals(type)) 
-                {
-                    String device = rs.getString("extraField1");
-                    String ipAddress = rs.getString("extraField2");
-                    ticket = new NetworkTicket(ticketNum, name, description, email, phone, creationDate, device, ipAddress);
-                }
-                if (ticket != null) 
-                {
-                    tickets.add(ticket);
+                    String ticketNum = parts[0];
+                    String name = parts[1];
+                    String email = parts[2];
+                    String phone = parts[3];
+                    String description = parts[4];
+                    Date date = new Date(Long.parseLong(parts[5]));
+
+                    Ticket ticket = null;
+                    if (ticketNum.startsWith("H")) // HardwareTicket
+                    {
+                        String hardware = parts[6];
+                        String model = parts[7];
+                        ticket = new HardwareTicket(ticketNum, name, description, email, phone, date, hardware, model);
+                    }
+                    else if (ticketNum.startsWith("S")) // SoftwareTicket
+                    {
+                        String software = parts[6];
+                        String version = parts[7];
+                        ticket = new SoftwareTicket(ticketNum, name, description, email, phone, date, software, version);
+                    }
+                    else if (ticketNum.startsWith("N")) // NetworkTicket
+                    {
+                        String device = parts[6];
+                        String ipAddress = parts[7];
+                        ticket = new NetworkTicket(ticketNum, name, description, email, phone, date, device, ipAddress);
+                    }
+
+                    if (ticket != null)
+                    {
+                        tickets.add(ticket);
+                    }
                 }
             }
         }
         return tickets;
     }
 
-
-    public void displayTickets() throws SQLException 
+    public void displayTickets(ArrayList<Ticket> tickets)
     {
-        String sql = "SELECT * FROM tickets";
-
-        try (Connection conn = DBConnection.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) 
+        for (Ticket ticket : tickets)
         {
-            // Iterate through the result set
-            while (rs.next()) {
-                String ticketNum = rs.getString("ticketNum");
-                String name = rs.getString("name");
-                String email = rs.getString("email");
-                String phone = rs.getString("phone");
-                String description = rs.getString("description");
-                Date creationDate = new Date(rs.getTimestamp("creationDate").getTime());
-                String status = rs.getString("status");
-                String type = rs.getString("type");
-
-                Ticket ticket = null;
-
-                // Instantiate the correct ticket subclass based on the type
-                if ("SoftwareTicket".equals(type)) {
-                    String software = rs.getString("extraField1");
-                    String version = rs.getString("extraField2");
-                    ticket = new SoftwareTicket(ticketNum, name, description, email, phone, creationDate, software, version);
-                } 
-                else if ("HardwareTicket".equals(type)) 
-                {
-                    String hardware = rs.getString("extraField1");
-                    String model = rs.getString("extraField2");
-                    ticket = new HardwareTicket(ticketNum, name, description, email, phone, creationDate, hardware, model);
-                } 
-                else if ("NetworkTicket".equals(type)) 
-                {
-                    String device = rs.getString("extraField1");
-                    String ipAddress = rs.getString("extraField2");
-                    ticket = new NetworkTicket(ticketNum, name, description, email, phone, creationDate, device, ipAddress);
-                }
-
-                // Print the ticket details
-                if (ticket != null) 
-                {
-                    System.out.println(ticket.toString());
-                }
-            }
+            // This will call the correct toString() method for each specific Ticket subclass
+            System.out.println(ticket.toString());
         }
     }
 
-    public void deleteTicket() throws SQLException 
+    public void deleteTicket(ArrayList<Ticket> tickets) throws IOException
     {
         Scanner scan = new Scanner(System.in);
-        System.out.print("Enter ticket number to delete: ");
+        System.out.print("Enter ticket number to delete: \n");
         System.out.print("H_ _ _, S_ _ _, N _ _ _");
         String ticketNum = scan.nextLine();
 
-        // SQL query to delete the ticket with the specified ticketNum
-        String sql = "DELETE FROM tickets WHERE ticketNum = ?";
-
-        try (Connection conn = DBConnection.connect(); 
-             PreparedStatement pstmt = conn.prepareStatement(sql)) 
-        {
-            // Set the ticketNum in the query
-            pstmt.setString(1, ticketNum);
-            
-            int rowsAffected = pstmt.executeUpdate();
-            
-            // Check if a ticket was actually deleted
-            if (rowsAffected > 0) 
-            {
-                System.out.println("\nTicket deleted successfully.\n");
-            } 
-            else 
-            {
-                System.out.println("\nTicket not found.\n");
-            }
-        }
+        tickets.removeIf(ticket -> ticket.getTicketNum().equals(ticketNum));
+        saveAllTickets(tickets);
+        System.out.println("\n          Ticket deleted successfully.            \n");
     }
 
-    public void editTicket() throws SQLException {
+    public void editTicket(ArrayList<Ticket> tickets) throws IOException
+    {
         Scanner scan = new Scanner(System.in);
         System.out.print("Enter ticket number to edit: ");
         System.out.print("H_ _ _, S_ _ _, N _ _ _");
         String ticketNum = scan.nextLine();
 
-        System.out.println("Edit status: Closed(1), Resolved(2), Open(3)");
-        int option = scan.nextInt();
-        scan.nextLine(); // Consume newline
-
-        // Determine the new status based on the user input
-        String newStatus = null;
-        switch (option) {
-            case 1:
-                newStatus = "Closed";
-                break;
-            case 2:
-                newStatus = "Resolved";
-                break;
-            case 3:
-                newStatus = "Open";
-                break;
-            default:
-                System.out.println("Invalid option.");
+        for (Ticket ticket : tickets)
+        {
+            if (ticket.getTicketNum().equals(ticketNum))
+            {
+                System.out.println("Edit status: Closed(1), Resolved(2), Open(3)");
+                int option = scan.nextInt();
+                scan.nextLine(); // Consume newline
+                switch (option)
+                {
+                    case 1:
+                        ticket.setStatus("Closed");
+                        break;
+                    case 2:
+                        ticket.setStatus("Resolved");
+                        break;
+                    case 3:
+                        ticket.setStatus("Open");
+                        break;
+                }
+                saveAllTickets(tickets);
+                System.out.println("\n          Ticket status updated successfully.            \n");
                 return;
+            }
         }
 
-        // SQL query to update the status of the ticket
-        String sql = "UPDATE tickets SET status = ? WHERE ticketNum = ?";
+        System.out.println("\n          Ticket not found.           \n");
+    }
 
-        try (Connection conn = DBConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) 
+    private void saveAllTickets(ArrayList<Ticket> tickets) throws IOException
+    {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(TICKETS_FILE)))
         {
-            // Set the new status and ticketNum in the query
-            pstmt.setString(1, newStatus);
-            pstmt.setString(2, ticketNum);
-
-            int rowsAffected = pstmt.executeUpdate();
-
-            // Check if the ticket was found and updated
-            if (rowsAffected > 0) 
+            for (Ticket ticket : tickets)
             {
-                System.out.println("\nTicket status updated successfully.\n");
-            } else 
-            {
-                System.out.println("\nTicket not found.\n");
+                writer.write(ticket.toFileString());
+                writer.newLine();
             }
         }
     }
 
-//    private void saveAllTickets(ArrayList<Ticket> tickets) throws IOException
-//    {
-//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(TICKETS_FILE)))
-//        {
-//            for (Ticket ticket : tickets)
-//            {
-//                writer.write(ticket.toFileString());
-//                writer.newLine();
-//            }
-//        }
-//    }
-
-    private String generateTicketNum(String type) throws SQLException 
+    private String generateTicketNum(String type) throws IOException
     {
-        String prefix = null;
-        switch (type) 
+        ArrayList<Ticket> tickets = loadTickets(); // Load all tickets
+        int nextTicketNumber = tickets.size() + 1; // Calculate the next ticket number based on the total count
+        char prefix = 'H'; // Default to Hardware, this will still prefix the ticket number with 'H', 'S', or 'N'
+
+        switch (type)
         {
             case "Hardware":
-                prefix = "H";
+                prefix = 'H';
                 break;
             case "Software":
-                prefix = "S";
+                prefix = 'S';
                 break;
             case "Network":
-                prefix = "N";
+                prefix = 'N';
                 break;
         }
 
-        String sql = "SELECT COUNT(*) FROM tickets WHERE ticketNum LIKE ?";
-        try (Connection conn = DBConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) 
-        {
-            pstmt.setString(1, prefix + "%");
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) 
-            {
-                int count = rs.getInt(1) + 1; // Next ticket number
-                return String.format("%s%03d", prefix, count);
-            }
-        }
-        return null; // Fallback, in case of failure
+        // Format the ticket number with the prefix and next sequential number
+        return String.format("%c%03d", prefix, nextTicketNumber); //prefix
     }
-
 
     private String capitalizeFirstLetter(String input)
     {
