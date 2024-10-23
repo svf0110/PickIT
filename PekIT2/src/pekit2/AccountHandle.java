@@ -8,65 +8,82 @@ package pekit2;
  *
  * @author Gio Turtal and Jose Laserna
  */
-import java.io.*;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class AccountHandle
-{
-    private static final String ACCOUNTS_FILE = "accounts.txt";
 
-    public Account login(String username, String password) throws IOException
-    {
-        List<Account> accounts = loadAccounts();
-        for (Account account : accounts)
-        {
-            if (account.getUsername().equals(username) && account.getPassword().equals(password))
-            {
-                return account;
+public class AccountHandle {
+
+    public void createAccountsTable() throws SQLException {
+        String sql = "CREATE TABLE accounts ("
+                + "username VARCHAR(255) PRIMARY KEY, "
+                + "password VARCHAR(255), "
+                + "type VARCHAR(50))";
+
+        try (Connection conn = DBConnection.connect();
+             Statement stmt = conn.createStatement()) {
+
+            stmt.executeUpdate(sql);
+            System.out.println("ACCOUNTS table created successfully.");
+
+        } catch (SQLException e) {
+            if (e.getSQLState().equals("X0Y32")) {
+                System.out.println("ACCOUNTS table already exists, skipping creation.");
+            } else {
+                throw e;
             }
         }
-        return null;
     }
 
-    public void createAccount() throws IOException
-    {
+    public Account login(String username, String password) throws SQLException {
+        String sql = "SELECT * FROM accounts WHERE username = ? AND password = ?";
+
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new Account(rs.getString("username"), rs.getString("password"), rs.getString("type"));
+            }
+        }
+        return null; // If no matching account is found
+    }
+
+    public void createAccount() throws SQLException {
         Scanner scan = new Scanner(System.in);
 
         System.out.println("\n          Press 'x' at any time to cancel account creation.           \n");
 
         System.out.print("Enter username: ");
         String username = scan.nextLine();
-        if (username.equalsIgnoreCase("x"))
-        {
+        if (username.equalsIgnoreCase("x")) {
             System.out.println("\nAccount creation canceled.\n");
             return;
         }
 
         System.out.print("Enter password: ");
         String password = scan.nextLine();
-        if (password.equalsIgnoreCase("x"))
-        {
+        if (password.equalsIgnoreCase("x")) {
             System.out.println("\nAccount creation canceled.\n");
             return;
         }
 
         System.out.print("Enter account type (1) IT Staff (2) Guest: ");
         String option = scan.nextLine();
-        if (option.equalsIgnoreCase("x"))
-        {
+        if (option.equalsIgnoreCase("x")) {
             System.out.println("\nAccount creation canceled.\n");
             return;
         }
 
         int accountTypeChoice;
-        try
-        {
+        try {
             accountTypeChoice = Integer.parseInt(option);
-        }
-        catch (NumberFormatException e)
-        {
+        } catch (NumberFormatException e) {
             System.out.println("\nInvalid input. Account creation canceled.\n");
             return;
         }
@@ -78,35 +95,30 @@ public class AccountHandle
         System.out.println("\n          Account created successfully.           \n");
     }
 
-    private void saveAccount(Account account) throws IOException
-    {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ACCOUNTS_FILE, true)))
-        {
-            writer.write(account.getUsername() + "," + account.getPassword() + "," + account.getType());
-            writer.newLine();
+    private void saveAccount(Account account) throws SQLException {
+        String sql = "INSERT INTO accounts (username, password, type) VALUES (?, ?, ?)";
+
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, account.getUsername());
+            pstmt.setString(2, account.getPassword());
+            pstmt.setString(3, account.getType());
+            pstmt.executeUpdate();
         }
     }
 
-    private List<Account> loadAccounts() throws IOException
-    {
+    public List<Account> loadAccounts() throws SQLException {
         List<Account> accounts = new ArrayList<>();
-        File file = new File(ACCOUNTS_FILE);
-        if (!file.exists())
-        {
-            return accounts;
-        }
+        String sql = "SELECT * FROM accounts";
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file)))
-        {
-            String line;
-            while ((line = reader.readLine()) != null)
-            {
-                String[] parts = line.split(",");
-                if (parts.length == 3)
-                {
-                    Account account = new Account(parts[0], parts[1], parts[2]);
-                    accounts.add(account);
-                }
+        try (Connection conn = DBConnection.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Account account = new Account(rs.getString("username"), rs.getString("password"), rs.getString("type"));
+                accounts.add(account);
             }
         }
         return accounts;

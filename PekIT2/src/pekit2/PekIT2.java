@@ -8,16 +8,35 @@ package pekit2;
  *
  * @author Gio Turtal and Jose Laserna
  */
+import java.sql.Connection;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class PekIT2
 {
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException
+    public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException
     {
-        Scanner scan = new Scanner(System.in);
+        TicketHandle ticketHandle = new TicketHandle();
         AccountHandle accountHandle = new AccountHandle();
+        
+        ticketHandle.checkTicketsTable();
+        accountHandle.createAccountsTable();
+        
+        
+        
+        try (Connection conn = DBConnection.connect()) {
+            if (conn != null) 
+            {
+                System.out.println("Connected to the database successfully!");
+            }
+        } catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
+        
+        Scanner scan = new Scanner(System.in);
 
         System.out.println("===============================================");
         System.out.println(" Welcome to Pek IT Service Desk Customer Support!");
@@ -53,7 +72,7 @@ public class PekIT2
         }
     }
 
-    private static void handleLogin(Scanner scan, AccountHandle accountHandle) throws IOException, ClassNotFoundException
+    private static void handleLogin(Scanner scan, AccountHandle accountHandle) throws IOException, ClassNotFoundException, SQLException
     {
         System.out.println("\n                 Login                     \n");
         System.out.print("Enter username: ");
