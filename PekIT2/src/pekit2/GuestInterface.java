@@ -9,14 +9,13 @@ package pekit2;
  * @author Gio Turtal and Jose Laserna
  */
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class GuestInterface
 {
     private TicketHandle ticketHandle = new TicketHandle();
 
-    public void displayMenu() throws IOException, ClassNotFoundException, SQLException
+    public void displayMenu() throws IOException, ClassNotFoundException
     {
         Scanner scan = new Scanner(System.in);
         while (true)

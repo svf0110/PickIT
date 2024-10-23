@@ -1,7 +1,7 @@
-Tue Oct 22 21:11:22 NZDT 2024 : Apache Derby Network Server - 10.17.1.0 - (1913217) started and ready to accept connections on port 1527
+Mon Oct 21 14:58:47 NZDT 2024 : Apache Derby Network Server - 10.17.1.0 - (1913217) started and ready to accept connections on port 1527
 ----------------------------------------------------------------
-Tue Oct 22 21:11:23 NZDT 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.17.1.0 - (1913217): instance a816c00e-0192-b347-d71b-ffffbb94b4b2 
+Mon Oct 21 15:00:09 NZDT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.17.1.0 - (1913217): instance a816c00e-0192-accc-5bb3-ffffbb94b4b2 
 on database directory C:\Users\User\Documents\NetBeansProjects\PickITUp\PekIT2\derby\PickITUpDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@70dea4e 
 Loaded from file:/C:/Users/User/Documents/NetBeansProjects/PickITUp/PekIT2/derby/db-derby-10.17.1.0-bin/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -13,8 +13,19 @@ os.version=10.0
 derby.system.home=C:\Users\User\Documents\NetBeansProjects\PickITUp\PekIT2\derby
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Wed Oct 23 01:05:44 NZDT 2024: Shutting down Derby engine
+Mon Oct 21 15:00:11 NZDT 2024:
+Shutting down instance a816c00e-0192-accc-5bb3-ffffbb94b4b2 on database directory C:\Users\User\Documents\NetBeansProjects\PickITUp\PekIT2\derby\PickITUpDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@70dea4e 
+Mon Oct 21 15:00:11 NZDT 2024 Thread[#33,DRDAConnThread_3,5,main] (DATABASE = PickITUpDB), (DRDAID = {2}), Database 'PickITUpDB' shutdown.
 ----------------------------------------------------------------
-Wed Oct 23 01:05:45 NZDT 2024:
-Shutting down instance a816c00e-0192-b347-d71b-ffffbb94b4b2 on database directory C:\Users\User\Documents\NetBeansProjects\PickITUp\PekIT2\derby\PickITUpDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@70dea4e 
-----------------------------------------------------------------
+Mon Oct 21 15:00:49 NZDT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.17.1.0 - (1913217): instance 97e00100-0192-accc-5bb3-ffffbb94b4b2 
+on database directory C:\Users\User\Documents\NetBeansProjects\PickITUp\PekIT2\derby\PickITUpDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@70dea4e 
+Loaded from file:/C:/Users/User/Documents/NetBeansProjects/PickITUp/PekIT2/derby/db-derby-10.17.1.0-bin/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=22.0.2+9-70
+user.dir=C:\Users\User\Documents\NetBeansProjects\PickITUp\PekIT2\derby\db-derby-10.17.1.0-bin
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=C:\Users\User\Documents\NetBeansProjects\PickITUp\PekIT2\derby
+Database Class Loader started - derby.database.classpath=''
