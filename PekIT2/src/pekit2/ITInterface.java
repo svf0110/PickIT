@@ -9,6 +9,7 @@ package pekit2;
  * @author Gio Turtal and Jose Laserna
  */
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ public class ITInterface
     private TicketHandle ticketHandle = new TicketHandle();
     private TicketSorting ticketSorting = new TicketSorting();
 
-    public void displayMenu() throws IOException, ClassNotFoundException
+    public void displayMenu() throws IOException, ClassNotFoundException, SQLException
     {
         ArrayList<Ticket> tickets = ticketHandle.loadTickets();
 
@@ -38,20 +39,20 @@ public class ITInterface
             switch (option)
             {
                 case "1":
-                    ticketHandle.displayTickets(tickets);
+                    ticketHandle.displayTickets();
                     break;
-                case "2":
-                    ticketSorting.filterTickets(tickets);
-                    break;
-                case "3":
-                    ticketSorting.sortTickets(tickets);
-                    break;
-                case "4":
-                    ticketHandle.editTicket(tickets);
-                    break;
-                case "5":
-                    ticketHandle.deleteTicket(tickets);
-                    break;
+//                case "2":
+//                    ticketSorting.filterTickets(tickets);
+//                    break;
+//                case "3":
+//                    ticketSorting.sortTickets(tickets);
+//                    break;
+//                case "4":
+//                    ticketHandle.editTicket(tickets);
+//                    break;
+//                case "5":
+//                    ticketHandle.deleteTicket(tickets);
+//                    break;
                 default:
                     System.out.println("\n          Invalid. Try Again.         \n");
             }

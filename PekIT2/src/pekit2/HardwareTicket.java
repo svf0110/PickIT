@@ -12,6 +12,34 @@ import java.util.Date;
 
 public class HardwareTicket extends Ticket
 {
+
+    /**
+     * @return the hardware
+     */
+    public String getHardware() {
+        return hardware;
+    }
+
+    /**
+     * @param hardware the hardware to set
+     */
+    public void setHardware(String hardware) {
+        this.hardware = hardware;
+    }
+
+    /**
+     * @return the model
+     */
+    public String getModel() {
+        return model;
+    }
+
+    /**
+     * @param model the model to set
+     */
+    public void setModel(String model) {
+        this.model = model;
+    }
     private String hardware;
     private String model;
 
@@ -25,14 +53,14 @@ public class HardwareTicket extends Ticket
     @Override
     public String toFileString()
     {
-        return super.toFileString() + String.format(",%s,%s", hardware, model);
+        return super.toFileString() + String.format(",%s,%s", getHardware(), getModel());
     }
 
     @Override
     public String toString()
     {
         return String.format("HardwareTicket [TicketNumber: %s, Name: %s, Status: %s, Hardware: %s, Model: %s, Description: %s]",
-                getTicketNum(), getName(), getStatus(), hardware, model, getDescription());
+                getTicketNum(), getName(), getStatus(), getHardware(), getModel(), getDescription());
     }
 
 }
