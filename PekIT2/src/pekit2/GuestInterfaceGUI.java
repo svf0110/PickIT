@@ -9,91 +9,6 @@ package pekit2;
  * @author jmrla
  */
 //
-//import javax.swing.*;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
-//
-//public class GuestInterfaceGUI extends JFrame {
-//
-//    public GuestInterfaceGUI() {
-//        // JFrame setup for Guest Menu
-//        setTitle("Guest Menu");
-//        setSize(400, 300);
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        setLayout(null);
-//
-//        // Buttons for guest actions
-//        JButton viewTicketsButton = new JButton("View Tickets");
-//        viewTicketsButton.setBounds(100, 50, 200, 30);
-//        add(viewTicketsButton);
-//
-//        JButton createTicketButton = new JButton("Create Guest Ticket");
-//        createTicketButton.setBounds(180, 20, 150, 40);
-//        add(createTicketButton);
-//
-//        createTicketButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                // Create a new JFrame for creating a ticket
-//                JFrame createTicketFrame = new JFrame("Create Ticket");
-//                createTicketFrame.setSize(400, 300);
-//                createTicketFrame.setLayout(null);
-//
-//                // Add components for creating a ticket (like text fields and labels)
-//                JLabel nameLabel = new JLabel("Enter your Name:");
-//                nameLabel.setBounds(20, 20, 150, 25);
-//                createTicketFrame.add(nameLabel);
-//
-//                JTextField nameField = new JTextField();
-//                nameField.setBounds(180, 20, 180, 25);
-//                createTicketFrame.add(nameField);
-//
-//                JLabel emailLabel = new JLabel("Enter your Email:");
-//                emailLabel.setBounds(20, 60, 150, 25);
-//                createTicketFrame.add(emailLabel);
-//
-//                JTextField emailField = new JTextField();
-//                emailField.setBounds(180, 60, 180, 25);
-//                createTicketFrame.add(emailField);
-//
-//                JLabel phoneLabel = new JLabel("Enter your Phone:");
-//                phoneLabel.setBounds(20, 100, 150, 25);
-//                createTicketFrame.add(phoneLabel);
-//
-//                JTextField phoneField = new JTextField();
-//                phoneField.setBounds(180, 100, 180, 25);
-//                createTicketFrame.add(phoneField);
-//
-//                JLabel descLabel = new JLabel("Enter Description:");
-//                descLabel.setBounds(20, 140, 150, 25);
-//                createTicketFrame.add(descLabel);
-//
-//                JTextField descField = new JTextField();
-//                descField.setBounds(180, 140, 180, 25);
-//                createTicketFrame.add(descField);
-//
-//                JLabel typeLabel = new JLabel("Select Ticket Type:");
-//                typeLabel.setBounds(20, 180, 150, 25);
-//                createTicketFrame.add(typeLabel);
-//
-//                String[] types = {"Hardware", "Software", "Network"};
-//                JComboBox<String> typeComboBox = new JComboBox<>(types);
-//                typeComboBox.setBounds(180, 180, 180, 25);
-//                createTicketFrame.add(typeComboBox);
-//
-//                JButton submitButton = new JButton("Submit");
-//                submitButton.setBounds(150, 220, 100, 30);
-//                createTicketFrame.add(submitButton);
-//            }
-//        // You can add more guest-specific features here
-//    });
-//                }
-//
-//    public static void main(String[] args) {
-//        GuestInterfaceGUI guestInterface = new GuestInterfaceGUI();
-//        guestInterface.setVisible(true);
-//    }
-//}
 
 import javax.swing.*;
 import java.awt.*;
@@ -121,8 +36,12 @@ public class GuestInterfaceGUI extends JFrame {
 
         // Create Guest Ticket Button
         JButton createTicketButton = new JButton("Create Guest Ticket");
-        createTicketButton.setBounds(100, 100, 200, 30);
+        createTicketButton.setBounds(100, 100, 200, 40);
         menuPanel.add(createTicketButton);
+        
+        JButton backButton = new JButton("Log Out");
+        backButton.setBounds(100, 200, 200, 40); // Adjust size and position as needed
+        menuPanel.add(backButton);
 
         createTicketButton.addActionListener(new ActionListener() {
             @Override
@@ -131,9 +50,11 @@ public class GuestInterfaceGUI extends JFrame {
                 JFrame createTicketFrame = new JFrame("Create Ticket");
                 createTicketFrame.setSize(400, 400);
                 createTicketFrame.setLayout(null);
+                createTicketFrame.getContentPane().setBackground(new Color(174, 255, 173)); // Light green background
+
 
                 // Add components for creating a ticket (like text fields and labels)
-                JLabel nameLabel = new JLabel("Enter your Name:");
+                JLabel nameLabel = new JLabel("Enter your Full Name:");
                 nameLabel.setBounds(20, 20, 150, 25);
                 createTicketFrame.add(nameLabel);
 
@@ -149,7 +70,7 @@ public class GuestInterfaceGUI extends JFrame {
                 emailField.setBounds(180, 60, 180, 25);
                 createTicketFrame.add(emailField);
 
-                JLabel phoneLabel = new JLabel("Enter your Phone:");
+                JLabel phoneLabel = new JLabel("Enter your Phone Number:");
                 phoneLabel.setBounds(20, 100, 150, 25);
                 createTicketFrame.add(phoneLabel);
 
@@ -219,6 +140,16 @@ public class GuestInterfaceGUI extends JFrame {
                 });
 
                 createTicketFrame.setVisible(true);
+            }
+        });
+        
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Go back to the login screen
+                LoginGUI loginGUI = new LoginGUI();
+                loginGUI.setVisible(true);
+                dispose(); // Close the current window
             }
         });
 

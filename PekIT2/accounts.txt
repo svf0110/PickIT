@@ -4,3 +4,4 @@ guest,123,Guest
 gio,123,IT
 teacher,123,IT
 chloe,123,IT
+guest2,123,Guest

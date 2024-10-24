@@ -61,9 +61,13 @@ public class ITInterfaceGUI extends JFrame {
         sortTicketsButton.setBounds(340, 20, 150, 40);
         formPanel.add(sortTicketsButton);
 
-        JButton filterTicketsButton = new JButton("Filter Tickets");
+        JButton filterTicketsButton = new JButton("Filter Tickets Type");
         filterTicketsButton.setBounds(500, 20, 150, 40);
         formPanel.add(filterTicketsButton);
+        
+        JButton backButton = new JButton("Log Out");
+        backButton.setBounds(660, 20, 150, 40); // Adjust size and position as needed
+        formPanel.add(backButton);
 
         // Add button listeners
         viewTicketsButton.addActionListener(new ActionListener() {
@@ -77,6 +81,16 @@ public class ITInterfaceGUI extends JFrame {
                 }
             }
         });
+        
+        backButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // Go back to the login screen
+            LoginGUI loginGUI = new LoginGUI();
+            loginGUI.setVisible(true);
+            dispose(); // Close the current window
+        }
+    });
 
         createTicketButton.addActionListener(new ActionListener() {
             @Override

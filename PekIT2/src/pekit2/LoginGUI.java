@@ -110,7 +110,7 @@ public class LoginGUI extends JFrame {
         // Make the frame visible
         setVisible(true);
     }
-
+    
     private void login() throws IOException {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
@@ -126,7 +126,7 @@ public class LoginGUI extends JFrame {
                     new ITInterfaceGUI().setVisible(true);  // Open IT interface for IT staff
                     break;
                 case "Guest":
-                    new GuestInterface().setVisible(true);  // Open Guest interface for guests
+                    new GuestInterfaceGUI().setVisible(true);  // Open Guest interface for guests
                     break;
                 default:
                     JOptionPane.showMessageDialog(this, "Unknown account type.");
