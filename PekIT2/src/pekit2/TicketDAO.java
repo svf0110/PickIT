@@ -35,7 +35,7 @@ public class TicketDAO {
             stmt.setString(3, ticket.getDescription());
             stmt.setString(4, ticket.getEmail());
             stmt.setString(5, ticket.getPhone());
-            stmt.setDate(6, new java.sql.Date(ticket.getDate().getTime()));
+            stmt.setDate(6, new java.sql.Date(ticket.getCreationDate().getTime()));
 
             // Add specific fields based on ticket type
             if (ticket instanceof HardwareTicket) {
@@ -43,8 +43,12 @@ public class TicketDAO {
                 stmt.setString(8, ((HardwareTicket) ticket).getModel());
             } else if (ticket instanceof SoftwareTicket) {
                 // Set software and version instead
+                stmt.setString(7, ((SoftwareTicket) ticket).getSoftware());
+                stmt.setString(8, ((SoftwareTicket) ticket).getVersion());
             } else if (ticket instanceof NetworkTicket) {
-                // Set device and IP address instead
+                //Set device and IP address instead
+                stmt.setString(7, ((NetworkTicket) ticket).getDevice());
+                stmt.setString(8, ((NetworkTicket) ticket).getIpAddress());
             }
 
             stmt.executeUpdate();
@@ -53,45 +57,99 @@ public class TicketDAO {
         }
     }
     
+//    // Method to get all tickets
+//    public ArrayList<Ticket> getAllTickets() throws SQLException {
+//        ArrayList<Ticket> tickets = new ArrayList<>();
+//        String sql = "SELECT * FROM tickets"; // Adjust SQL based on your table name
+//        try (Statement stmt = connection.createStatement();
+//             ResultSet rs = stmt.executeQuery(sql)) {
+//            while (rs.next()) {
+//                // Assuming you have a 'Ticket' table with appropriate columns
+//                String ticketNum = rs.getString("ticketNum");
+//                String name = rs.getString("name");
+//                String description = rs.getString("description");
+//                String email = rs.getString("email");
+//                String phone = rs.getString("phone");
+//                Date creationDate = new Date(rs.getLong("creationDate")); // Assuming it's stored as a timestamp
+//                String type = rs.getString("type"); // Add type if needed for subclassing
+//
+//                // Create the ticket based on its type
+//                Ticket ticket = null;
+//                if (type.equals("Hardware")) {
+//                    String hardware = rs.getString("hardware");
+//                    String model = rs.getString("model");
+//                    ticket = new HardwareTicket(ticketNum, name, description, email, phone, creationDate, hardware, model);
+//                } else if (type.equals("Software")) {
+//                    String software = rs.getString("software");
+//                    String version = rs.getString("version");
+//                    ticket = new SoftwareTicket(ticketNum, name, description, email, phone, creationDate, software, version);
+//                } else if (type.equals("Network")) {
+//                    String device = rs.getString("device");
+//                    String ipAddress = rs.getString("ipAddress");
+//                    ticket = new NetworkTicket(ticketNum, name, description, email, phone, creationDate, device, ipAddress);
+//                }
+//
+//                if (ticket != null) {
+//                    tickets.add(ticket);
+//                }
+//            }
+//        }
+//        return tickets;
+//    }
+    
     // Method to get all tickets
-    public ArrayList<Ticket> getAllTickets() throws SQLException {
-        ArrayList<Ticket> tickets = new ArrayList<>();
-        String sql = "SELECT * FROM tickets"; // Adjust SQL based on your table name
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                // Assuming you have a 'Ticket' table with appropriate columns
-                String ticketNum = rs.getString("ticketNum");
-                String name = rs.getString("name");
-                String description = rs.getString("description");
-                String email = rs.getString("email");
-                String phone = rs.getString("phone");
-                Date creationDate = new Date(rs.getLong("creationDate")); // Assuming it's stored as a timestamp
-                String type = rs.getString("type"); // Add type if needed for subclassing
+public ArrayList<Ticket> getAllTickets() throws SQLException {
+    ArrayList<Ticket> tickets = new ArrayList<>();
+    String sql = "SELECT * FROM tickets"; // Adjust SQL based on your table name
+    try (Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
 
-                // Create the ticket based on its type
-                Ticket ticket = null;
-                if (type.equals("Hardware")) {
-                    String hardware = rs.getString("hardware");
-                    String model = rs.getString("model");
-                    ticket = new HardwareTicket(ticketNum, name, description, email, phone, creationDate, hardware, model);
-                } else if (type.equals("Software")) {
-                    String software = rs.getString("software");
-                    String version = rs.getString("version");
-                    ticket = new SoftwareTicket(ticketNum, name, description, email, phone, creationDate, software, version);
-                } else if (type.equals("Network")) {
-                    String device = rs.getString("device");
-                    String ipAddress = rs.getString("ipAddress");
-                    ticket = new NetworkTicket(ticketNum, name, description, email, phone, creationDate, device, ipAddress);
-                }
+        while (rs.next()) {
+            // Assuming you have a 'Ticket' table with appropriate columns
+            String ticketNum = rs.getString("ticketNum");
+            String name = rs.getString("name");
+            String description = rs.getString("description");
+            String email = rs.getString("email");
+            String phone = rs.getString("phone");
+            Date creationDate = new Date(rs.getTimestamp("creation_date").getTime()); // Assuming it's stored as a timestamp
+            String type = rs.getString("type"); // Ensure this field exists
 
-                if (ticket != null) {
-                    tickets.add(ticket);
+            // Create the ticket based on its type
+            Ticket ticket = null;
+            if (type != null) { // Check if type is not null
+                switch (type) {
+                    case "Hardware":
+                        String hardware = rs.getString("hardware");
+                        String model = rs.getString("model");
+                        ticket = new HardwareTicket(ticketNum, name, description, email, phone, creationDate, hardware, model);
+                        break;
+                    case "Software":
+                        String software = rs.getString("software");
+                        String version = rs.getString("version");
+                        ticket = new SoftwareTicket(ticketNum, name, description, email, phone, creationDate, software, version);
+                        break;
+                    case "Network":
+                        String device = rs.getString("device");
+                        String ipAddress = rs.getString("ipAddress");
+                        ticket = new NetworkTicket(ticketNum, name, description, email, phone, creationDate, device, ipAddress);
+                        break;
+                    default:
+                        System.out.println("Unknown ticket type: " + type);
+                        break;
                 }
             }
+
+            if (ticket != null) {
+                tickets.add(ticket);
+            }
         }
-        return tickets;
+    } catch (SQLException e) {
+        // Handle SQL exception appropriately
+        throw new SQLException("Failed to retrieve tickets from the database", e);
     }
+    return tickets;
+}
+
     
     // Method to update ticket status
     public void updateTicketStatus(String ticketNum, String status) throws SQLException {

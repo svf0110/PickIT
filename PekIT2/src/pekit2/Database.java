@@ -24,7 +24,12 @@ public class Database {
     }
     
     public Connection connect() throws SQLException {
-        return DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+        conn = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+        return conn;
+    }
+    
+    public Connection getConnection() {
+        return conn;
     }
 
     private void establishConnection() {
@@ -36,10 +41,10 @@ public class Database {
             throw new RuntimeException(ex);
         }
     }
-
-    public Connection getConnection() {
-        return conn;
-    }
+    
+//    public Connection getConnection() throws SQLException {
+//        return DriverManager.getConnection(URL, USER_NAME, PASSWORD);
+//    }
 
     public void closeConnection() {
         try {

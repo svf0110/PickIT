@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
+
 
 public class GuestInterfaceGUI extends JFrame {
     private TicketHandle ticketHandle;
@@ -107,41 +109,81 @@ public class GuestInterfaceGUI extends JFrame {
                 submitButton.setBounds(150, 220, 100, 30);
                 createTicketFrame.add(submitButton);
 
-                submitButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // Logic to create and save the ticket using the TicketHandle class
-                        String name = nameField.getText();
-                        String email = emailField.getText();
-                        String phone = phoneField.getText();
-                        String description = descField.getText();
-                        String type = (String) typeComboBox.getSelectedItem();
+//                submitButton.addActionListener(new ActionListener() {
+//                    @Override
+//                    public void actionPerformed(ActionEvent e) {
+//                        // Logic to create and save the ticket using the TicketHandle class
+//                        String name = nameField.getText();
+//                        String email = emailField.getText();
+//                        String phone = phoneField.getText();
+//                        String description = descField.getText();
+//                        String type = (String) typeComboBox.getSelectedItem();
+//
+//                        String details = "";
+//                        switch (type) {
+//                            case "Hardware":
+//                                String hardware = JOptionPane.showInputDialog("Enter the type of Hardware:");
+//                                String model = JOptionPane.showInputDialog("Enter Model Number of Hardware:");
+//                                details = "Hardware: " + hardware + ", Model: " + model;
+//                                ticketHandle.createHardwareTicket(name, email, phone, description, hardware, model);
+//                                break;
+//                            case "Software":
+//                                String software = JOptionPane.showInputDialog("Enter name of Software:");
+//                                String version = JOptionPane.showInputDialog("Enter the current Version of Software:");
+//                                details = "Software: " + software + ", Version: " + version;
+//                                ticketHandle.createSoftwareTicket(name, email, phone, description, software, version);
+//                                break;
+//                            case "Network":
+//                                String device = JOptionPane.showInputDialog("Enter Network Issue:");
+//                                String ipAddress = JOptionPane.showInputDialog("Enter IP address:");
+//                                details = "Device: " + device + ", IP: " + ipAddress;
+//                                ticketHandle.createNetworkTicket(name, email, phone, description, device, ipAddress);
+//                                break;
+//                        }
+//                        JOptionPane.showMessageDialog(createTicketFrame, "Ticket Created Successfully!");
+//                        createTicketFrame.dispose(); // Close the frame after submission
+//                    }
+//                });
 
-                        String details = "";
+                submitButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String name = nameField.getText();
+                    String email = emailField.getText();
+                    String phone = phoneField.getText();
+                    String description = descField.getText();
+                    String type = (String) typeComboBox.getSelectedItem();
+
+                    try {
                         switch (type) {
                             case "Hardware":
                                 String hardware = JOptionPane.showInputDialog("Enter the type of Hardware:");
                                 String model = JOptionPane.showInputDialog("Enter Model Number of Hardware:");
-                                details = "Hardware: " + hardware + ", Model: " + model;
                                 ticketHandle.createHardwareTicket(name, email, phone, description, hardware, model);
                                 break;
                             case "Software":
                                 String software = JOptionPane.showInputDialog("Enter name of Software:");
                                 String version = JOptionPane.showInputDialog("Enter the current Version of Software:");
-                                details = "Software: " + software + ", Version: " + version;
                                 ticketHandle.createSoftwareTicket(name, email, phone, description, software, version);
                                 break;
                             case "Network":
                                 String device = JOptionPane.showInputDialog("Enter Network Issue:");
                                 String ipAddress = JOptionPane.showInputDialog("Enter IP address:");
-                                details = "Device: " + device + ", IP: " + ipAddress;
                                 ticketHandle.createNetworkTicket(name, email, phone, description, device, ipAddress);
                                 break;
                         }
                         JOptionPane.showMessageDialog(createTicketFrame, "Ticket Created Successfully!");
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(createTicketFrame, "Error creating ticket: " + ex.getMessage());
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(createTicketFrame, "Database error: " + ex.getMessage());
+                    } finally {
                         createTicketFrame.dispose(); // Close the frame after submission
                     }
-                });
+                }
+            });
+
+
 
                 createTicketFrame.setVisible(true);
             }

@@ -26,13 +26,12 @@ public class LoginGUI extends JFrame {
 
 
     public LoginGUI() {
-        accountHandle = new AccountHandle();
 
         Database db = new Database();
         db.initialize();
         conn = db.getConnection(); // Save the connection for reuse in this class
 
-        
+        accountHandle = new AccountHandle(conn);
         TicketDAO ticketDAO = new TicketDAO(conn);
         AccountDAO accountDAO = new AccountDAO(conn);
 
@@ -179,7 +178,7 @@ public class LoginGUI extends JFrame {
 
         // Create new account and save it
         Account newAccount = new Account(username, password, type);
-        accountHandle.saveAccount(newAccount);
+        accountHandle.saveAccount(username, password, type);
 
         JOptionPane.showMessageDialog(this, "Account created successfully!");
     }

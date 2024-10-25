@@ -7,6 +7,8 @@ package pekit2;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.sql.SQLException;
+
 /**
  *
  * @author Gio Turtal and Jose Laserna
@@ -44,9 +46,6 @@ public class ITInterface {
                 case "1":
                     ticketHandle.displayTickets(tickets, ticketDisplayArea); // Pass the JTextArea
                     break;
-//                case "2":
-//                    ticketSorting.filterTickets(tickets, ticketDisplayArea); // Pass the JTextArea
-//                    break;
                     case "2":
                     // Prompt the user for filter type
                     String[] filterOptions = {"All", "Hardware", "Software", "Network"};
@@ -68,11 +67,53 @@ public class ITInterface {
                     ticketSorting.sortTickets(tickets, ticketDisplayArea); // Update this if necessary
                     break;
                 case "4":
-                    ticketHandle.editTicket(tickets);
-                    break;
+                // Prompt the user for the ticket number
+                String ticketNum = JOptionPane.showInputDialog("Enter the ticket number you want to edit:");
+                if (ticketNum == null || ticketNum.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Ticket editing canceled.");
+                    break; // Exit the case if user cancels
+                }
+
+                // Prompt for the new status
+                String[] statusOptions = {"Open", "In Progress", "Resolved", "Closed"};
+                String status = (String) JOptionPane.showInputDialog(
+                    null,
+                    "Select new status:",
+                    "Edit Ticket Status",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    statusOptions,
+                    statusOptions[0] // Default selection
+                );
+
+                if (status == null) {
+                    JOptionPane.showMessageDialog(null, "Ticket editing canceled.");
+                    break; // Exit if user cancels
+                }
+
+                // Call the editTicket method with the gathered inputs
+                try {
+                    ticketHandle.editTicket(ticketNum, status);
+                } catch (IOException | SQLException e) {
+                    JOptionPane.showMessageDialog(null, "Failed to update ticket status: " + e.getMessage());
+                }
+                break;
                 case "5":
-                    ticketHandle.deleteTicket(tickets);
-                    break;
+                // Prompt the user for the ticket number to delete
+                String ticketNumToDelete = JOptionPane.showInputDialog("Enter the ticket number you want to delete:");
+                if (ticketNumToDelete == null || ticketNumToDelete.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Ticket deletion canceled.");
+                    break; // Exit the case if user cancels
+                }
+
+                // Call the deleteTicket method with the gathered input
+                try {
+                    ticketHandle.deleteTicket(ticketNumToDelete);
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, "Failed to delete ticket: " + e.getMessage());
+                }
+                break;
+
                 default:
                     JOptionPane.showMessageDialog(null, "Invalid option. Try Again.");
             }

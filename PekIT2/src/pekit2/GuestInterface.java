@@ -11,6 +11,8 @@ package pekit2;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.Scanner;
+import java.sql.SQLException;
+
 
 public class GuestInterface extends JFrame {
     private TicketHandle ticketHandle;
@@ -68,7 +70,36 @@ public class GuestInterface extends JFrame {
         submitButton.setBounds(150, 220, 100, 30);
         add(submitButton);
 
-        submitButton.addActionListener(e -> {
+//        submitButton.addActionListener(e -> {
+//            // Logic to create and save the ticket using the TicketHandle class
+//            String name = nameField.getText();
+//            String email = emailField.getText();
+//            String phone = phoneField.getText();
+//            String description = descField.getText();
+//            String type = (String) typeComboBox.getSelectedItem();
+//
+//            switch (type) {
+//                case "Hardware":
+//                    String hardware = JOptionPane.showInputDialog("Enter the type of Hardware:");
+//                    String model = JOptionPane.showInputDialog("Enter Model Number of Hardware:");
+//                    ticketHandle.createHardwareTicket(name, email, phone, description, hardware, model);
+//                    break;
+//                case "Software":
+//                    String software = JOptionPane.showInputDialog("Enter name of Software:");
+//                    String version = JOptionPane.showInputDialog("Enter the current Version of Software:");
+//                    ticketHandle.createSoftwareTicket(name, email, phone, description, software, version);
+//                    break;
+//                case "Network":
+//                    String device = JOptionPane.showInputDialog("Enter Network Issue:");
+//                    String ipAddress = JOptionPane.showInputDialog("Enter IP address:");
+//                    ticketHandle.createNetworkTicket(name, email, phone, description, device, ipAddress);
+//                    break;
+//            }
+//            JOptionPane.showMessageDialog(this, "Ticket Created Successfully!");
+//            this.dispose(); // Close the frame after submission
+//        });
+
+            submitButton.addActionListener(e -> {
             // Logic to create and save the ticket using the TicketHandle class
             String name = nameField.getText();
             String email = emailField.getText();
@@ -76,26 +107,33 @@ public class GuestInterface extends JFrame {
             String description = descField.getText();
             String type = (String) typeComboBox.getSelectedItem();
 
-            switch (type) {
-                case "Hardware":
-                    String hardware = JOptionPane.showInputDialog("Enter the type of Hardware:");
-                    String model = JOptionPane.showInputDialog("Enter Model Number of Hardware:");
-                    ticketHandle.createHardwareTicket(name, email, phone, description, hardware, model);
-                    break;
-                case "Software":
-                    String software = JOptionPane.showInputDialog("Enter name of Software:");
-                    String version = JOptionPane.showInputDialog("Enter the current Version of Software:");
-                    ticketHandle.createSoftwareTicket(name, email, phone, description, software, version);
-                    break;
-                case "Network":
-                    String device = JOptionPane.showInputDialog("Enter Network Issue:");
-                    String ipAddress = JOptionPane.showInputDialog("Enter IP address:");
-                    ticketHandle.createNetworkTicket(name, email, phone, description, device, ipAddress);
-                    break;
+            try {
+                switch (type) {
+                    case "Hardware":
+                        String hardware = JOptionPane.showInputDialog("Enter the type of Hardware:");
+                        String model = JOptionPane.showInputDialog("Enter Model Number of Hardware:");
+                        ticketHandle.createHardwareTicket(name, email, phone, description, hardware, model);
+                        break;
+                    case "Software":
+                        String software = JOptionPane.showInputDialog("Enter name of Software:");
+                        String version = JOptionPane.showInputDialog("Enter the current Version of Software:");
+                        ticketHandle.createSoftwareTicket(name, email, phone, description, software, version);
+                        break;
+                    case "Network":
+                        String device = JOptionPane.showInputDialog("Enter Network Issue:");
+                        String ipAddress = JOptionPane.showInputDialog("Enter IP address:");
+                        ticketHandle.createNetworkTicket(name, email, phone, description, device, ipAddress);
+                        break;
+                }
+                JOptionPane.showMessageDialog(this, "Ticket Created Successfully!");
+                this.dispose(); // Close the frame after submission
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error creating ticket: " + ex.getMessage());
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Database error: " + ex.getMessage());
             }
-            JOptionPane.showMessageDialog(this, "Ticket Created Successfully!");
-            this.dispose(); // Close the frame after submission
         });
+
     }
     
     public void displayMenu() throws IOException, ClassNotFoundException {

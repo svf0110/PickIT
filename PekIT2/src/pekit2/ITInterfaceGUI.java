@@ -17,6 +17,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.sql.Connection;
+import java.sql.SQLException;
+
 
 
 public class ITInterfaceGUI extends JFrame {
@@ -187,7 +189,7 @@ public class ITInterfaceGUI extends JFrame {
                             addTicketToTable(name, email, phone, description, type, details);
                             JOptionPane.showMessageDialog(createTicketFrame, "Ticket Created Successfully!");
                             createTicketFrame.dispose(); // Close the frame after submission
-                        } catch (IOException ex) {
+                        } catch (IOException | SQLException ex) {
                             JOptionPane.showMessageDialog(createTicketFrame, "Error creating ticket: " + ex.getMessage());
                         }
                     }

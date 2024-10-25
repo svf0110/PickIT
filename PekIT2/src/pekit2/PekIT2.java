@@ -11,15 +11,23 @@ package pekit2;
 import java.io.IOException;
 import java.util.Scanner;
 import javax.swing.JTextArea;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 
 public class PekIT2
 {
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException
-    {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         Scanner scan = new Scanner(System.in);
-        AccountHandle accountHandle = new AccountHandle();
 
+        // Obtain a database connection
+        Database database = new Database();
+        Connection conn = null;
+        try {
+            conn = database.connect(); // Assuming you have a method to get a connection
+            AccountHandle accountHandle = new AccountHandle(conn); // Pass the connection to the AccountHandle constructor
+        
         System.out.println("===============================================");
         System.out.println(" Welcome to Pek IT Service Desk Customer Support!");
         System.out.println("===============================================");
@@ -52,7 +60,19 @@ public class PekIT2
                     break;
             }
         }
+        } catch (SQLException e) {
+            System.err.println("Failed to connect to the database: " + e.getMessage());
+            return; // Exit the program or handle as needed
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close(); // Ensure the connection is closed
+                } catch (SQLException e) {
+                    System.err.println("Failed to close the database connection: " + e.getMessage());
+                }
+        }
     }
+}
 
 //    private static void handleLogin(Scanner scan, AccountHandle accountHandle) throws IOException, ClassNotFoundException
 //    {

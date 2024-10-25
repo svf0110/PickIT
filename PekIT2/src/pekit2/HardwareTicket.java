@@ -27,6 +27,14 @@ public class HardwareTicket extends Ticket
         return "Hardware";
     }
     
+    public String getHardware() {
+        return hardware;
+    }
+
+    public String getModel() {
+        return model;
+    }
+    
     @Override
     public String getSpecificDetails() {
         return String.format("Hardware: %s, Model: %s", hardware, model);

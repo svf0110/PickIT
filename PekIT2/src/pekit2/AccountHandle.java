@@ -115,10 +115,13 @@
 
 package pekit2;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.sql.Connection;
+import java.sql.SQLException;
+
 
 public class AccountHandle {
     private AccountDAO accountDAO;
@@ -127,9 +130,31 @@ public class AccountHandle {
         accountDAO = new AccountDAO(conn);
     }
 
-    public Account login(String username, String password) {
-        return accountDAO.getAccount(username, password); // Retrieve account from the database
+//    public Account login(String username, String password) {
+//        return accountDAO.getAccount(username, password); // Retrieve account from the database
+//    }
+    
+//    public void saveAccount(Account account) throws SQLException {
+//        accountDAO.addAccount(account); // Assuming this method exists in AccountDAO
+//    }
+    
+    // This method accepts parameters instead of an Account object
+    public void saveAccount(String username, String password, String accountType) throws IOException {
+        boolean success = accountDAO.addAccount(username, password, accountType);
+        if (!success) {
+            throw new IOException("Failed to create account; it may already exist.");
+        }
     }
+    
+    public Account login(String username, String password) {
+        try {
+            return accountDAO.getAccount(username, password); // Retrieve account from the database
+        } catch (SQLException e) {
+            System.out.println("Error retrieving account: " + e.getMessage());
+            return null; // Handle the error appropriately
+        }
+    }
+
 
     public void createAccount() {
         Scanner scan = new Scanner(System.in);
@@ -164,7 +189,17 @@ public class AccountHandle {
         System.out.println("\n          Account created successfully.           \n");
     }
 
+//    public List<Account> loadAccounts() {
+//        return accountDAO.getAllAccounts(); // Load accounts from database
+//    }
+    
     public List<Account> loadAccounts() {
+    try {
         return accountDAO.getAllAccounts(); // Load accounts from database
+    } catch (SQLException e) {
+        System.out.println("Error loading accounts: " + e.getMessage());
+        return new ArrayList<>(); // Return an empty list or handle as needed
     }
+}
+
 }

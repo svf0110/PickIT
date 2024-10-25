@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -112,5 +114,65 @@ public class AccountDAO {
         } catch (SQLException ex) {
             System.err.println("Error retrieving accounts: " + ex.getMessage());
         }
+    }
+    
+//     // Method to get an account by username and password
+//    public Account getAccount(String username, String password) throws SQLException {
+//        Account account = null;
+//        String sql = "SELECT * FROM accounts WHERE username = ? AND password = ?"; // Adjust the SQL as needed
+//        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+//            stmt.setString(1, username);
+//            stmt.setString(2, password);
+//
+//            try (ResultSet rs = stmt.executeQuery()) {
+//                if (rs.next()) {
+//                    String accountId = rs.getString("accountId");
+//                    // Assume the Account class has a constructor that takes these fields
+//                    account = new Account(accountId, username, password); // Adjust according to your Account class definition
+//                }
+//            }
+//        }
+//        return account; // Return null if no account was found
+//    }
+    
+    public Account getAccount(String username, String password) throws SQLException {
+    Account account = null;
+    String sql = "SELECT username, type FROM accounts WHERE username = ? AND password = ?"; // Select only the necessary fields
+    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, username);
+        stmt.setString(2, password);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                String type = rs.getString("type"); // Retrieve the type
+                account = new Account(username, password, type); // Use the constructor that matches
+            }
+        }
+    }
+    return account; // Return null if no account was found
+}
+
+
+    
+    public List<Account> getAllAccounts() throws SQLException {
+        List<Account> accounts = new ArrayList<>();
+        String sql = "SELECT * FROM accounts"; // Adjust SQL based on your table name
+
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                // Assuming your Account class has a constructor matching the following fields
+                String username = rs.getString("username");
+                String password = rs.getString("password"); // Ensure passwords are handled securely
+                String type = "user"; // Set a default or retrieve from the result set if available
+                // Add any other necessary fields
+
+                // Create an Account object and add it to the list
+                Account account = new Account(username, password, type); // Adjust constructor as needed
+                accounts.add(account);
+            }
+        }
+
+        return accounts;
     }
 }
