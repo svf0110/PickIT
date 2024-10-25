@@ -14,16 +14,31 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.sql.Connection;
+
 
 public class LoginGUI extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton loginButton, createAccountButton;
     private AccountHandle accountHandle;
+    private Connection conn;
+
 
     public LoginGUI() {
         accountHandle = new AccountHandle();
 
+        Database db = new Database();
+        db.initialize();
+        conn = db.getConnection(); // Save the connection for reuse in this class
+
+        
+        TicketDAO ticketDAO = new TicketDAO(conn);
+        AccountDAO accountDAO = new AccountDAO(conn);
+
+        // Test creating the account table
+        accountDAO.createAccountTable();
+        
         // Set up the JFrame
         setTitle("Welcome to PIU Service Desk System");
         setSize(1000, 600);

@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Fri Oct 25 15:22:17 NZDT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0192-c17b-5272-00000cefc010 
+on database directory C:\Users\jmrla\OneDrive\Documents\NetBeansProjects\PickITUp\PekIT2\serviceDeskDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@18ef96 
+Loaded from file:/C:/Users/jmrla/OneDrive/Desktop/db-derby-10.14.2.0-lib/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=11.0.24+7-LTS-271
+user.dir=C:\Users\jmrla\OneDrive\Documents\NetBeansProjects\PickITUp\PekIT2
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

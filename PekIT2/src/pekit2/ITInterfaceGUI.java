@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.sql.Connection;
+
 
 public class ITInterfaceGUI extends JFrame {
     private TicketHandle ticketHandle;
@@ -24,7 +26,11 @@ public class ITInterfaceGUI extends JFrame {
     private DefaultTableModel tableModel;
 
     public ITInterfaceGUI() {
-        ticketHandle = new TicketHandle();
+        Database database = new Database();
+        database.initialize(); // Establish the connection
+        Connection connection = database.getConnection(); // Get the connection
+        
+        ticketHandle = new TicketHandle(connection);
         ticketSorting = new TicketSorting();
 
         // Set up JFrame
@@ -240,7 +246,7 @@ sortTicketsButton.addActionListener(new ActionListener() {
                 ticket.getPhone(),
                 ticket.getDescription(),
                 ticket.getType(),
-                ticket.getDetails()
+                ticket.getSpecificDetails()
             };
             tableModel.addRow(rowData);
         }

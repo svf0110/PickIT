@@ -35,7 +35,7 @@ public abstract class Ticket
     public abstract String getType();
     
     
-    public String getDetails() {
+    public String getSpecificDetails() {
         return details;
     }
 

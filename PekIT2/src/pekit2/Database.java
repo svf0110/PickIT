@@ -13,14 +13,14 @@ import java.sql.SQLException;
  * @author jmrla
  */
 public class Database {
-    private static final String USER_NAME = "jose";
+    private static final String USER_NAME = "sleepii2";
     private static final String PASSWORD = "jobiwan2212";
-    private static final String URL = "jdbc:derby:PickITUp;create=true;";
+    private static final String URL = "jdbc:derby://localhost:1527/PIUDatabase";
     private Connection conn;
 
     public void initialize() {
         establishConnection();
-        initializeDAOs();
+        //initializeDAOs();
     }
     
     public Connection connect() throws SQLException {
@@ -49,9 +49,9 @@ public class Database {
         }
     }
 
-    private void initializeDAOs() {
-        AccountDAO accountDAO = new AccountDAO(conn);
-        TicketDAO ticketDAO = new TicketDAO(conn);
-    }
+//    private void initializeDAOs() {
+//        AccountDAO accountDAO = new AccountDAO(conn);
+//        TicketDAO ticketDAO = new TicketDAO(conn);
+//    }
 }
 

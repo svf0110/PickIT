@@ -13,9 +13,8 @@ import java.util.ArrayList;
  */
 
 public class ITInterface {
-    public TicketHandle ticketHandle = new TicketHandle();
+    public TicketHandle ticketHandle;
     public TicketSorting ticketSorting = new TicketSorting();
-
     private JTextArea ticketDisplayArea; // Create JTextArea for displaying tickets
 
     public ITInterface(JTextArea displayArea) {
