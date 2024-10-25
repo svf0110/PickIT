@@ -11,11 +11,14 @@
             <file>file:/C:/Users/jmrla/OneDrive/Documents/NetBeansProjects/PickITUp/PekIT2/src/pekit2/SoftwareTicket.java</file>
             <file>file:/C:/Users/jmrla/OneDrive/Documents/NetBeansProjects/PickITUp/PekIT2/src/pekit2/TicketHandle.java</file>
             <file>file:/C:/Users/jmrla/OneDrive/Documents/NetBeansProjects/PickITUp/PekIT2/src/pekit2/HardwareTicket.java</file>
+            <file>file:/C:/Users/jmrla/OneDrive/Documents/NetBeansProjects/PickITUp/PekIT2/src/pekit2/TicketDAO.java</file>
+            <file>file:/C:/Users/jmrla/OneDrive/Documents/NetBeansProjects/PickITUp/PekIT2/src/pekit2/Database.java</file>
             <file>file:/C:/Users/jmrla/OneDrive/Documents/NetBeansProjects/PickITUp/PekIT2/src/pekit2/Ticket.java</file>
             <file>file:/C:/Users/jmrla/OneDrive/Documents/NetBeansProjects/PickITUp/PekIT2/src/pekit2/ITInterface.java</file>
             <file>file:/C:/Users/jmrla/OneDrive/Documents/NetBeansProjects/PickITUp/PekIT2/src/pekit2/NetworkTicket.java</file>
             <file>file:/C:/Users/jmrla/OneDrive/Documents/NetBeansProjects/PickITUp/PekIT2/src/pekit2/AccountHandle.java</file>
             <file>file:/C:/Users/jmrla/OneDrive/Documents/NetBeansProjects/PickITUp/PekIT2/src/pekit2/LoginGUI.java</file>
+            <file>file:/C:/Users/jmrla/OneDrive/Documents/NetBeansProjects/PickITUp/PekIT2/src/pekit2/AccountDAO.java</file>
         </group>
     </open-files>
 </project-private>
