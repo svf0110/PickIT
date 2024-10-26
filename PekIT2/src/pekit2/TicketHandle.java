@@ -9,8 +9,6 @@ package pekit2;
  * @author Gio Turtal and Jose Laserna
  */
 import java.sql.Statement;
-import java.io.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 import java.sql.Connection;
@@ -43,88 +41,32 @@ public class TicketHandle {
             }
         }
     }
+    
+    public void createTicket(String type, String name, String description, String email, String phone, String priority, String field1, String field2) throws SQLException {
+        Ticket ticket = null;  // Declare ticket here
+        String ticketnum = generateTicketNum(type);  // Declare ticketnum here
 
-    public void createTicket(String type) throws IOException, SQLException {
-        Scanner scan = new Scanner(System.in);
-        System.out.print("            Please fill in Ticket Details.          \n\n");
-        System.out.print("Enter your Name: ");
-        String name = scan.nextLine();
-        System.out.print("Enter your Email: ");
-        String email = scan.nextLine();
-        System.out.print("Enter your Phone: ");
-        String phone = scan.nextLine();
-        System.out.print("Enter Description: ");
-        String description = scan.nextLine();
-        
-        String priority = "";
-        while (true) {
-            System.out.println("Enter Priority: ");
-            System.out.println("(1) Low\n(2) Medium\n(3) High\n(4) Critical");
-            String priorityChoice = scan.nextLine();
-
-            switch (priorityChoice) {
-                case "1":
-                    priority = "Low";
-                    break;
-                case "2":
-                    priority = "Medium";
-                    break;
-                case "3":
-                    priority = "High";
-                    break;
-                case "4":
-                    priority = "Critical";
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid priority (1-4).");
-                    continue; // If invalid, prompt user again
-            }
-            break; // Exit the loop once a valid priority is selected
-        }
-
-        Ticket ticket = null;
-        String ticketNum = generateTicketNum(type); // Generate ticket number based on existing tickets
-
-        name = capitalizeFirstLetter(name);
-
-        switch (type) {
+        switch (type) 
+        {
             case "Hardware":
-                System.out.print("Enter the type of Hardware: ");
-                String hardware = scan.nextLine();
-                System.out.print("Enter Model Number of Hardware: ");
-                String model = scan.nextLine();
-                ticket = new HardwareTicket(ticketNum, name, description, email, phone, new Date(), priority, hardware, model);
-                break;
+                ticket = new HardwareTicket(ticketnum, name, description, email, phone, new Date(), priority, field1, field2);
+                saveTicket(ticket);
+                return;
             case "Software":
-                System.out.print("Enter name of Software: ");
-                String software = scan.nextLine();
-                System.out.print("Enter the current Version of Software: ");
-                String version = scan.nextLine();
-                ticket = new SoftwareTicket(ticketNum, name, description, email, phone, new Date(), priority, software, version);
-                break;
+                ticket = new SoftwareTicket(ticketnum, name, description, email, phone, new Date(), priority, field1, field2);
+                saveTicket(ticket);
+                return;
             case "Network":
-                System.out.print("Enter Network Issue: ");
-                String device = scan.nextLine();
-                System.out.print("Enter IP address: ");
-                String ipAddress = scan.nextLine();
-                ticket = new NetworkTicket(ticketNum, name, description, email, phone, new Date(), priority, device, ipAddress);
-                break;
-        }
-
-        if (ticket != null) {
-            saveTicket(ticket);
-            System.out.println("-----------------------------------------------");
-            System.out.println("      Ticket created successfully!             ");
-            System.out.println("-----------------------------------------------\n");
-
-            System.out.println("   Thank you for reaching out to us.        ");
-            System.out.println(" Our team is already reviewing your request,");
-            System.out.println("  and we will contact you shortly to assist. ");
-            System.out.println("   Rest assured, we're here to help you.   \n ");
+                ticket = new NetworkTicket(ticketnum, name, description, email, phone, new Date(), priority, field1, field2);
+                saveTicket(ticket);
+                return;
+            default:
+                throw new IllegalArgumentException("Unknown ticket type: " + type);
         }
     }
 
-    private void saveTicket(Ticket ticket) throws SQLException {
+
+    public void saveTicket(Ticket ticket) throws SQLException {
         String sql = "INSERT INTO tickets (ticketNum, name, description, email, phone, creationDate, status, priority, type, extraField1, extraField2) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -156,51 +98,6 @@ public class TicketHandle {
             pstmt.executeUpdate();
         }
     }
-
-    // Other methods (loadTickets, displayTickets, deleteTicket, editTicket) 
-    // will also be updated to handle the `priority` field similarly, including it in all operations.
-
-
-    //THIS MIGHT NOT EVEN BE USED!!!!!!!
-    public ArrayList<Ticket> loadTickets() throws SQLException {
-        
-        ArrayList<Ticket> tickets = new ArrayList<>();
-        String sql = "SELECT * FROM tickets";
-        try (Connection conn = DBConnection.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                String ticketNum = rs.getString("ticketNum");
-                String name = rs.getString("name");
-                String email = rs.getString("email");
-                String phone = rs.getString("phone");
-                String description = rs.getString("description");
-                Date creationDate = new Date(rs.getTimestamp("creationDate").getTime());
-                String status = rs.getString("status");
-                String type = rs.getString("type");
-                String priority = rs.getString("priority");  // Fetch the priority field
-
-                Ticket ticket = null;
-                if ("SoftwareTicket".equals(type)) {
-                    String software = rs.getString("extraField1");
-                    String version = rs.getString("extraField2");
-                    ticket = new SoftwareTicket(ticketNum, name, description, email, phone, creationDate, priority, software, version);
-                } else if ("HardwareTicket".equals(type)) {
-                    String hardware = rs.getString("extraField1");
-                    String model = rs.getString("extraField2");
-                    ticket = new HardwareTicket(ticketNum, name, description, email, phone, creationDate, priority, hardware, model);
-                } else if ("NetworkTicket".equals(type)) {
-                    String device = rs.getString("extraField1");
-                    String ipAddress = rs.getString("extraField2");
-                    ticket = new NetworkTicket(ticketNum, name, description, email, phone, creationDate, priority, device, ipAddress);
-                }
-                if (ticket != null) {
-                    tickets.add(ticket);
-                }
-            }
-        }
-        return tickets;
-    }
-
-
 
     public void displayTickets() throws SQLException {
         String sql = "SELECT * FROM tickets";
@@ -243,96 +140,24 @@ public class TicketHandle {
         }
     }
 
-    public void deleteTicket() throws SQLException 
-    {
-        Scanner scan = new Scanner(System.in);
-        System.out.print("Enter ticket number to delete: ");
-        System.out.print("H_ _ _, S_ _ _, N _ _ _");
-        String ticketNum = scan.nextLine();
-
-        // SQL query to delete the ticket with the specified ticketNum
-        String sql = "DELETE FROM tickets WHERE ticketNum = ?";
-
-        try (Connection conn = DBConnection.connect(); 
-             PreparedStatement pstmt = conn.prepareStatement(sql)) 
-        {
-            // Set the ticketNum in the query
-            pstmt.setString(1, ticketNum);
-            
-            int rowsAffected = pstmt.executeUpdate();
-            
-            // Check if a ticket was actually deleted
-            if (rowsAffected > 0) 
-            {
-                System.out.println("\nTicket deleted successfully.\n");
-            } 
-            else 
-            {
-                System.out.println("\nTicket not found.\n");
-            }
-        }
-    }
-
-    public void editTicket() throws SQLException {
-        Scanner scan = new Scanner(System.in);
-        System.out.print("Enter ticket number to edit: ");
-        System.out.print("H_ _ _, S_ _ _, N _ _ _");
-        String ticketNum = scan.nextLine();
-
-        System.out.println("Edit status: Closed(1), Resolved(2), Open(3)");
-        int option = scan.nextInt();
-        scan.nextLine(); // Consume newline
-
-        // Determine the new status based on the user input
-        String newStatus = null;
-        switch (option) {
-            case 1:
-                newStatus = "Closed";
-                break;
-            case 2:
-                newStatus = "Resolved";
-                break;
-            case 3:
-                newStatus = "Open";
-                break;
-            default:
-                System.out.println("Invalid option.");
-                return;
-        }
-
-        // SQL query to update the status of the ticket
+    public void updateTicketStatus(String ticketNum, String newStatus) throws SQLException {
         String sql = "UPDATE tickets SET status = ? WHERE ticketNum = ?";
-
-        try (Connection conn = DBConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) 
-        {
-            // Set the new status and ticketNum in the query
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, newStatus);
             pstmt.setString(2, ticketNum);
-
-            int rowsAffected = pstmt.executeUpdate();
-
-            // Check if the ticket was found and updated
-            if (rowsAffected > 0) 
-            {
-                System.out.println("\nTicket status updated successfully.\n");
-            } else 
-            {
-                System.out.println("\nTicket not found.\n");
-            }
+            pstmt.executeUpdate();
         }
     }
 
-//    private void saveAllTickets(ArrayList<Ticket> tickets) throws IOException
-//    {
-//        try (BufferedWriter writer = new BufferedWriter(new FileWriter(TICKETS_FILE)))
-//        {
-//            for (Ticket ticket : tickets)
-//            {
-//                writer.write(ticket.toFileString());
-//                writer.newLine();
-//            }
-//        }
-//    }
+    public void deleteTicket(String ticketNum) throws SQLException {
+        String sql = "DELETE FROM tickets WHERE ticketNum = ?";
+        try (Connection conn = DBConnection.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, ticketNum);
+            pstmt.executeUpdate();
+        }
+    }
 
     private String generateTicketNum(String type) throws SQLException 
     {
@@ -362,15 +187,5 @@ public class TicketHandle {
             }
         }
         return null; // Fallback, in case of failure
-    }
-
-
-    private String capitalizeFirstLetter(String input)
-    {
-        if (input == null || input.isEmpty())
-        {
-            return input;
-        }
-        return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
     }
 }

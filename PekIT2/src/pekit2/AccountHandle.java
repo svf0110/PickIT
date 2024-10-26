@@ -54,41 +54,7 @@ public class AccountHandle {
         return null; // If no matching account is found
     }
 
-    public void createAccount() throws SQLException {
-        Scanner scan = new Scanner(System.in);
-
-        System.out.println("\n          Press 'x' at any time to cancel account creation.           \n");
-
-        System.out.print("Enter username: ");
-        String username = scan.nextLine();
-        if (username.equalsIgnoreCase("x")) {
-            System.out.println("\nAccount creation canceled.\n");
-            return;
-        }
-
-        System.out.print("Enter password: ");
-        String password = scan.nextLine();
-        if (password.equalsIgnoreCase("x")) {
-            System.out.println("\nAccount creation canceled.\n");
-            return;
-        }
-
-        System.out.print("Enter account type (1) IT Staff (2) Guest: ");
-        String option = scan.nextLine();
-        if (option.equalsIgnoreCase("x")) {
-            System.out.println("\nAccount creation canceled.\n");
-            return;
-        }
-
-        int accountTypeChoice;
-        try {
-            accountTypeChoice = Integer.parseInt(option);
-        } catch (NumberFormatException e) {
-            System.out.println("\nInvalid input. Account creation canceled.\n");
-            return;
-        }
-
-        String type = accountTypeChoice == 1 ? "IT" : "Guest";
+    public void createAccount(String username, String password, String type) throws SQLException {
 
         Account newAccount = new Account(username, password, type);
         saveAccount(newAccount);
