@@ -224,7 +224,7 @@ public class ITInterfaceGUI extends JFrame {
 
     private void filterTicketsByType() {
         // Define options for ticket types
-        String[] ticketTypes = {"All", "Hardware Ticket", "Software Ticket", "Network Ticket"};
+        String[] ticketTypes = {"All", "HardwareTicket", "SoftwareTicket", "NetworkTicket"};
 
         // Show a dropdown dialog to select the ticket type
         String selectedType = (String) JOptionPane.showInputDialog(
@@ -315,7 +315,7 @@ public class ITInterfaceGUI extends JFrame {
             JOptionPane.showMessageDialog(this, "No ticket number entered.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+        
         private void openDeleteTicketDialog() {
         String ticketNum = JOptionPane.showInputDialog(this, "Enter Ticket Number to Delete (H, S, N): ");
 

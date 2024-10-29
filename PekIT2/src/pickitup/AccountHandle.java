@@ -22,7 +22,7 @@ public class AccountHandle {
                 + "password VARCHAR(255), "
                 + "type VARCHAR(50))";
 
-        try (Connection conn = DBConnection.connect(); // Establish a connection to the database
+        try (Connection conn = DBConnection.connect(); // Establishes connection to the database
              Statement stmt = conn.createStatement()) {
 
             stmt.executeUpdate(sql); // Execute the SQL statement

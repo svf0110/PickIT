@@ -111,7 +111,7 @@ public class TicketHandle {
                 String phone = rs.getString("phone");
                 String description = rs.getString("description");
                 Date creationDate = new Date(rs.getTimestamp("creationDate").getTime());
-                //String status = rs.getString("status");
+                String status = rs.getString("status");
                 String type = rs.getString("type");
                 String priority = rs.getString("priority");  // Fetch the priority field
 
