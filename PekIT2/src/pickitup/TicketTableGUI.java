@@ -2,12 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package pekit2;
-
-/**
- *
- * @author Gio Turtal and Jose Laserna
- */
+package pickitup;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -15,6 +10,11 @@ import java.awt.*;
 import java.sql.*;
 import java.util.Comparator;
 import java.util.Vector;
+
+/**
+ *
+ * @author Gio Turtal and Jose Laserna
+ */
 
 public class TicketTableGUI extends JFrame {
 

@@ -2,18 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package pekit2;
-
-/**
- *
- * @author jmrla
- */
+package pickitup;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+
+/**
+ *
+ * @author Gio Turtal and Jose Laserna
+ */
 
 public class GuestInterfaceGUI extends JFrame {
     

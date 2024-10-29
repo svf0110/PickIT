@@ -2,32 +2,31 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package pekit2;
-
-/**
- *
- * @author jmrla
- */
+package pickitup;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ *
+ * @author Gio Turtal and Jose Laserna
+ */
+
 public class LoginGUI extends JFrame {
-    private JTextField usernameField;
-    private JPasswordField passwordField;
-    private JButton loginButton, createAccountButton;
-    private AccountHandle accountHandle;
+    public JTextField usernameField;
+    public JPasswordField passwordField;
+    public JButton loginButton, createAccountButton;
+    public AccountHandle accountHandle;
 
     public LoginGUI() {
         accountHandle = new AccountHandle();
 
         // Set up the JFrame
         setTitle("Welcome to PIU Service Desk System");
-        setSize(1000, 600);
+        setSize(1100, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -96,7 +95,7 @@ public class LoginGUI extends JFrame {
             System.err.println("Error: Logo image not found or unable to load.");
         } else {
             JLabel logoLabel = new JLabel(logoIcon);
-            logoLabel.setBounds(100, 250, 200, 200); // Adjust size and position as needed
+            logoLabel.setBounds(820, 250, 200, 200); // Adjust size and position as needed
             formPanel.add(logoLabel); // Add logo label to form panel
         }
 
@@ -122,6 +121,7 @@ public class LoginGUI extends JFrame {
                 default:
                     JOptionPane.showMessageDialog(this, "Unknown account type.");
             }
+                dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid username or password!");
             }

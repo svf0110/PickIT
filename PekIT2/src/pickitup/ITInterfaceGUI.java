@@ -2,12 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package pekit2;
-
-/**
- *
- * @author Gio Turtal and Jose Laserna
- */
+package pickitup;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -17,6 +12,11 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.Comparator;
 import java.util.Vector;
+
+/**
+ *
+ * @author Gio Turtal and Jose Laserna
+ */
 
 public class ITInterfaceGUI extends JFrame {
     private TicketHandle ticketHandle;
@@ -33,13 +33,13 @@ public class ITInterfaceGUI extends JFrame {
 
         // Set up JFrame
         setTitle("IT Staff Menu");
-        setSize(1200, 600);
+        setSize(1200, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
         // Create a light green background panel for the form
         JPanel formPanel = new JPanel();
-        formPanel.setBounds(200, 0, 1000, 600);
+        formPanel.setBounds(200, 0, 1000, 650);
         formPanel.setLayout(null);
         formPanel.setBackground(new Color(174, 255, 173));
         add(formPanel);
@@ -118,7 +118,7 @@ public class ITInterfaceGUI extends JFrame {
                 filterTicketsByType();  // Reload the data in the table
             }
         });
-        
+
         JButton editStatusButton = new JButton("Edit Status");
         editStatusButton.setBounds(180, 20, 150, 40);
         formPanel.add(editStatusButton);
@@ -138,8 +138,33 @@ public class ITInterfaceGUI extends JFrame {
                 openDeleteTicketDialog();
             }
         });
-    }
 
+        // Log Out button
+        JButton logoutButton = new JButton("Log Out");
+        logoutButton.setBounds(870, 10, 100, 30);
+        formPanel.add(logoutButton);
+
+        logoutButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            // Display confirmation dialog
+            int confirm = JOptionPane.showConfirmDialog(
+                    ITInterfaceGUI.this,
+                    "Are you sure you want to log out?",
+                    "Confirm Log Out",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            // Check if user confirmed to log out
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Go back to login screen
+                dispose();
+                new LoginGUI().setVisible(true);
+            }
+        }
+    });        
+    }
+    
     // Method to toggle individual column visibility
     private void toggleColumnVisibility(int columnIndex, boolean visible) {
         columnVisibility[columnIndex] = visible ? 1 : 0;
@@ -199,7 +224,7 @@ public class ITInterfaceGUI extends JFrame {
 
     private void filterTicketsByType() {
         // Define options for ticket types
-        String[] ticketTypes = {"All", "HardwareTicket", "SoftwareTicket", "NetworkTicket"};
+        String[] ticketTypes = {"All", "Hardware Ticket", "Software Ticket", "Network Ticket"};
 
         // Show a dropdown dialog to select the ticket type
         String selectedType = (String) JOptionPane.showInputDialog(
@@ -260,47 +285,65 @@ public class ITInterfaceGUI extends JFrame {
         }
     }
     
-    private void openEditStatusDialog() {
-        String ticketNum = JOptionPane.showInputDialog(this, "Enter Ticket Number:");
-        if (ticketNum != null) {
-            String[] statuses = {"Open", "Closed", "Resolved"};
-            String newStatus = (String) JOptionPane.showInputDialog(this, "Select new status:",
-                    "Edit Ticket Status", JOptionPane.QUESTION_MESSAGE, null, statuses, "Open");
+        private void openEditStatusDialog() {
+        String ticketNum = JOptionPane.showInputDialog(this, "Enter Ticket Number (H, S, N):");
 
-            if (newStatus != null) {
-                try {
-                    ticketHandle.updateTicketStatus(ticketNum, newStatus);
-                    loadDataFromDatabase(); // Refresh table
-                    JOptionPane.showMessageDialog(this, "Status updated successfully.");
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(this, "Failed to update status.");
+        // Validate ticket number
+        if (ticketNum != null && !ticketNum.isEmpty()) {
+            char firstChar = ticketNum.charAt(0);
+            if (firstChar == 'H' || firstChar == 'S' || firstChar == 'N') {
+                String[] statuses = {"Open", "Closed", "Resolved"};
+                String newStatus = (String) JOptionPane.showInputDialog(this, "Select new status:",
+                        "Edit Ticket Status", JOptionPane.QUESTION_MESSAGE, null, statuses, "Open");
+
+                if (newStatus != null) {
+                    try {
+                        ticketHandle.updateTicketStatus(ticketNum, newStatus);
+                        loadDataFromDatabase(); // Refresh table
+                        JOptionPane.showMessageDialog(this, "Status updated successfully.");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Failed to update status.");
+                    }
                 }
+            } else {
+                // Show error message if the input does not start with the required letters
+                JOptionPane.showMessageDialog(this, "Invalid Ticket Number. It must start with H, S, or N.", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        } else {
+            // Handle the case where the user cancels the dialog or enters nothing
+            JOptionPane.showMessageDialog(this, "No ticket number entered.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void openDeleteTicketDialog() {
-        String ticketNum = JOptionPane.showInputDialog(this, "Enter Ticket Number to Delete:");
-        if (ticketNum != null) {
-            int confirmation = JOptionPane.showConfirmDialog(this,
-                    "Are you sure you want to delete ticket " + ticketNum + "?",
-                    "Delete Ticket", JOptionPane.YES_NO_OPTION);
+        private void openDeleteTicketDialog() {
+        String ticketNum = JOptionPane.showInputDialog(this, "Enter Ticket Number to Delete (H, S, N): ");
 
-            if (confirmation == JOptionPane.YES_OPTION) {
-                try {
-                    ticketHandle.deleteTicket(ticketNum);
-                    loadDataFromDatabase(); // Refresh table
-                    JOptionPane.showMessageDialog(this, "Ticket deleted successfully.");
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog(this, "Failed to delete ticket.");
+        // Validate ticket number
+        if (ticketNum != null && !ticketNum.isEmpty()) {
+            char firstChar = ticketNum.charAt(0);
+            if (firstChar == 'H' || firstChar == 'S' || firstChar == 'N') {
+                int confirmation = JOptionPane.showConfirmDialog(this,
+                        "Are you sure you want to delete ticket " + ticketNum + "?",
+                        "Delete Ticket", JOptionPane.YES_NO_OPTION);
+
+                if (confirmation == JOptionPane.YES_OPTION) {
+                    try {
+                        ticketHandle.deleteTicket(ticketNum);
+                        loadDataFromDatabase(); // Refresh table
+                        JOptionPane.showMessageDialog(this, "Ticket deleted successfully.");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Failed to delete ticket.");
+                    }
                 }
+            } else {
+                // Show error message if the input does not start with the required letters
+                JOptionPane.showMessageDialog(this, "Invalid Ticket Number. It must start with H, S, or N.", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        } else {
+            // Handle the case where the user cancels the dialog or enters nothing
+            JOptionPane.showMessageDialog(this, "No ticket number entered.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-//    public static void main(String[] args) {
-//        SwingUtilities.invokeLater(() -> new ITInterfaceGUI().setVisible(true));
-//    }
 }
