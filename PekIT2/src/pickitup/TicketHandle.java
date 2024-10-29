@@ -2,19 +2,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package pekit2;
+package pickitup;
+
+import java.sql.Statement;
+import java.util.Date;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  *
  * @author Gio Turtal and Jose Laserna
  */
-import java.sql.Statement;
-import java.util.Date;
-import java.util.Scanner;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 public class TicketHandle {
 
@@ -111,7 +111,7 @@ public class TicketHandle {
                 String phone = rs.getString("phone");
                 String description = rs.getString("description");
                 Date creationDate = new Date(rs.getTimestamp("creationDate").getTime());
-                String status = rs.getString("status");
+                //String status = rs.getString("status");
                 String type = rs.getString("type");
                 String priority = rs.getString("priority");  // Fetch the priority field
 
@@ -158,7 +158,7 @@ public class TicketHandle {
             pstmt.executeUpdate();
         }
     }
-
+    
     private String generateTicketNum(String type) throws SQLException 
     {
         String prefix = null;
