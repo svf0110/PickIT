@@ -21,7 +21,8 @@ public abstract class Ticket {
     protected String status;
     protected String priority; // New field for priority
 
-    public Ticket(String ticketNum, String name, String description, String email, String phone, Date creationDate, String priority) {
+    public Ticket(String ticketNum, String name, String description, String email, String phone, Date creationDate, String priority) 
+    {
         this.ticketNum = ticketNum;
         this.name = name;
         this.description = description;

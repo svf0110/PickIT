@@ -16,7 +16,8 @@ public class SoftwareTicket extends Ticket
     private String software;
     private String version;
 
-    public SoftwareTicket(String ticketNum, String name, String description, String email, String phone, Date creationDate, String priority, String software, String version) {
+    public SoftwareTicket(String ticketNum, String name, String description, String email, String phone, Date creationDate, String priority, String software, String version) 
+    {
         super(ticketNum, name, description, email, phone, creationDate, priority);
         this.software = software;
         this.version = version;

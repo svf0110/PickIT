@@ -15,13 +15,15 @@ import java.sql.SQLException;
  * @author Gio Turtal and Jose Laserna
  */
 
-public class LoginGUI extends JFrame {
+public class LoginGUI extends JFrame 
+{
     public JTextField usernameField;
     public JPasswordField passwordField;
     public JButton loginButton, createAccountButton;
     public AccountHandle accountHandle;
 
-    public LoginGUI() {
+    public LoginGUI() 
+    {
         accountHandle = new AccountHandle();
 
         // Set up the JFrame
@@ -65,16 +67,20 @@ public class LoginGUI extends JFrame {
         formPanel.add(createAccountButton);
 
         // Set up the button listeners
-        loginButton.addActionListener(new ActionListener() {
+        loginButton.addActionListener(new ActionListener() 
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) 
+            {
                 handleLogin();
             }
         });
 
-        createAccountButton.addActionListener(new ActionListener() {
+        createAccountButton.addActionListener(new ActionListener() 
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) 
+            {
                 handleAccountCreation();
             }
         });
@@ -103,15 +109,18 @@ public class LoginGUI extends JFrame {
         setVisible(true);
     }
 
-    private void handleLogin() {
+    private void handleLogin() 
+    {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
         
         try {
             Account account = accountHandle.login(username, password);
-            if (account != null) {
+            if (account != null) 
+            {
                 JOptionPane.showMessageDialog(this, "Login successful! Welcome, " + account.getUsername());
-                switch (account.getType()) {
+                switch (account.getType()) 
+                {
                 case "IT":
                     new ITInterfaceGUI().setVisible(true);  // Open IT interface for IT staff
                     break;
@@ -122,17 +131,22 @@ public class LoginGUI extends JFrame {
                     JOptionPane.showMessageDialog(this, "Unknown account type.");
             }
                 dispose();
-            } else {
+            } 
+            else 
+            {
                 JOptionPane.showMessageDialog(this, "Invalid username or password!");
             }
             
-        } catch (SQLException ex) {
+        } 
+        catch (SQLException ex) 
+        {
             JOptionPane.showMessageDialog(this, "Login failed due to a database error.");
             ex.printStackTrace();
         }
     }
 
-    private void handleAccountCreation() {
+    private void handleAccountCreation() 
+    {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
 
@@ -146,22 +160,23 @@ public class LoginGUI extends JFrame {
                 accountTypes, 
                 accountTypes[0]);
 
-        if (type != null && !type.isEmpty()) {
-            try {
+        if (type != null && !type.isEmpty()) 
+        {
+            try 
+            {
                 accountHandle.createAccount(username, password, type);
                 JOptionPane.showMessageDialog(this, "Account created successfully as " + type);
-            } catch (SQLException ex) {
+            } 
+            catch (SQLException ex) 
+            {
                 JOptionPane.showMessageDialog(this, "Account creation failed due to a database error.");
                 ex.printStackTrace();
             }
-        } else {
+        } 
+        else 
+        {
             JOptionPane.showMessageDialog(this, "Account creation canceled.");
         }
-    }
-    
-    public static void main(String[] args) {
-        // Create and show the login GUI
-        SwingUtilities.invokeLater(() -> new LoginGUI());
     }
 }
 

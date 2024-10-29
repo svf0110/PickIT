@@ -16,7 +16,8 @@ public class NetworkTicket extends Ticket
     private String device;
     private String ipAddress;
 
-    public NetworkTicket(String ticketNum, String name, String description, String email, String phone, Date creationDate, String priority, String device, String ipAddress) {
+    public NetworkTicket(String ticketNum, String name, String description, String email, String phone, Date creationDate, String priority, String device, String ipAddress) 
+    {
         super(ticketNum, name, description, email, phone, creationDate, priority);
         this.device = device;
         this.ipAddress = ipAddress;

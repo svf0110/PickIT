@@ -16,9 +16,11 @@ import java.sql.ResultSet;
  * @author Gio Turtal and Jose Laserna
  */
 
-public class TicketHandle {
+public class TicketHandle 
+{
 
-    public void checkTicketsTable() throws SQLException {
+    public void checkTicketsTable() throws SQLException 
+    {
         String sql = "CREATE TABLE tickets ("
                 + "ticketNum VARCHAR(10) PRIMARY KEY, "
                 + "name VARCHAR(255), description VARCHAR(1000), email VARCHAR(255), "
@@ -26,23 +28,28 @@ public class TicketHandle {
                 + "priority VARCHAR(20), " // Added priority column
                 + "type VARCHAR(20), extraField1 VARCHAR(255), extraField2 VARCHAR(255))";
 
-        try (Connection conn = DBConnection.connect(); Statement stmt = conn.createStatement()) {
-
-            stmt.executeUpdate(sql);
+        try (Connection conn = DBConnection.connect(); Statement stmnt = conn.createStatement()) 
+        {
+            stmnt.executeUpdate(sql);
             System.out.println("TICKETS table created successfully.");
 
-        } catch (SQLException e) {
+        } catch (SQLException e) 
+        {
             // Check if the error is because the table already exists
-            if (e.getSQLState().equals("X0Y32")) {
+            if (e.getSQLState().equals("X0Y32")) 
+            {
                 System.out.println("TICKETS table already exists, skipping creation.");
-            } else {
+            } 
+            else 
+            {
                 // Re-throw the exception if it's some other issue
                 throw e;
             }
         }
     }
     
-    public void createTicket(String type, String name, String description, String email, String phone, String priority, String field1, String field2) throws SQLException {
+    public void createTicket(String type, String name, String description, String email, String phone, String priority, String field1, String field2) throws SQLException 
+    {
         Ticket ticket = null;  // Declare ticket here
         String ticketnum = generateTicketNum(type);  // Declare ticketnum here
 
@@ -66,96 +73,115 @@ public class TicketHandle {
     }
 
 
-    public void saveTicket(Ticket ticket) throws SQLException {
+    public void saveTicket(Ticket ticket) throws SQLException 
+    {
         String sql = "INSERT INTO tickets (ticketNum, name, description, email, phone, creationDate, status, priority, type, extraField1, extraField2) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = DBConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, ticket.getTicketNum());
-            pstmt.setString(2, ticket.getName());
-            pstmt.setString(3, ticket.getDescription());
-            pstmt.setString(4, ticket.getEmail());
-            pstmt.setString(5, ticket.getPhone());
-            pstmt.setTimestamp(6, new java.sql.Timestamp(ticket.getCreationDate().getTime()));
-            pstmt.setString(7, ticket.getStatus());
-            pstmt.setString(8, ticket.getPriority()); // Save priority
-            pstmt.setString(9, ticket.getClass().getSimpleName());
-            if (ticket instanceof SoftwareTicket) {
+        try (Connection conn = DBConnection.connect(); PreparedStatement pstmnt = conn.prepareStatement(sql)) 
+        {
+            pstmnt.setString(1, ticket.getTicketNum());
+            pstmnt.setString(2, ticket.getName());
+            pstmnt.setString(3, ticket.getDescription());
+            pstmnt.setString(4, ticket.getEmail());
+            pstmnt.setString(5, ticket.getPhone());
+            pstmnt.setTimestamp(6, new java.sql.Timestamp(ticket.getCreationDate().getTime()));
+            pstmnt.setString(7, ticket.getStatus());
+            pstmnt.setString(8, ticket.getPriority()); // Save priority
+            pstmnt.setString(9, ticket.getClass().getSimpleName());
+            if (ticket instanceof SoftwareTicket) 
+            {
                 SoftwareTicket st = (SoftwareTicket) ticket;
-                pstmt.setString(10, st.getSoftware());
-                pstmt.setString(11, st.getVersion());
-            } else if (ticket instanceof HardwareTicket) {
+                pstmnt.setString(10, st.getSoftware());
+                pstmnt.setString(11, st.getVersion());
+            } 
+            else if (ticket instanceof HardwareTicket) 
+            {
                 HardwareTicket ht = (HardwareTicket) ticket;
-                pstmt.setString(10, ht.getHardware());
-                pstmt.setString(11, ht.getModel());
-            } else if (ticket instanceof NetworkTicket) {
+                pstmnt.setString(10, ht.getHardware());
+                pstmnt.setString(11, ht.getModel());
+            } 
+            else if (ticket instanceof NetworkTicket) 
+            {
                 NetworkTicket nt = (NetworkTicket) ticket;
-                pstmt.setString(10, nt.getDevice());
-                pstmt.setString(11, nt.getIpAddress());
-            } else {
-                pstmt.setString(10, null);
-                pstmt.setString(11, null);
+                pstmnt.setString(10, nt.getDevice());
+                pstmnt.setString(11, nt.getIpAddress());
+            } 
+            else 
+            {
+                pstmnt.setString(10, null);
+                pstmnt.setString(11, null);
             }
-            pstmt.executeUpdate();
+            pstmnt.executeUpdate();
         }
     }
 
     public void displayTickets() throws SQLException {
         String sql = "SELECT * FROM tickets";
 
-        try (Connection conn = DBConnection.connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        try (Connection conn = DBConnection.connect(); Statement stmnt = conn.createStatement(); ResultSet resultSet = stmnt.executeQuery(sql)) {
             // Iterate through the result set
-            while (rs.next()) {
-                String ticketNum = rs.getString("ticketNum");
-                String name = rs.getString("name");
-                String email = rs.getString("email");
-                String phone = rs.getString("phone");
-                String description = rs.getString("description");
-                Date creationDate = new Date(rs.getTimestamp("creationDate").getTime());
-                String status = rs.getString("status");
-                String type = rs.getString("type");
-                String priority = rs.getString("priority");  // Fetch the priority field
+            while (resultSet.next()) 
+            {
+                String ticketNum = resultSet.getString("ticketNum");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String phone = resultSet.getString("phone");
+                String description = resultSet.getString("description");
+                Date creationDate = new Date(resultSet.getTimestamp("creationDate").getTime());
+                String status = resultSet.getString("status");
+                String type = resultSet.getString("type");
+                String priority = resultSet.getString("priority");  // Fetch the priority field
 
                 Ticket ticket = null;
 
                 // Instantiate the correct ticket subclass based on the type
-                if ("SoftwareTicket".equals(type)) {
-                    String software = rs.getString("extraField1");
-                    String version = rs.getString("extraField2");
+                if ("SoftwareTicket".equals(type)) 
+                {
+                    String software = resultSet.getString("extraField1");
+                    String version = resultSet.getString("extraField2");
                     ticket = new SoftwareTicket(ticketNum, name, description, email, phone, creationDate, priority, software, version);
-                } else if ("HardwareTicket".equals(type)) {
-                    String hardware = rs.getString("extraField1");
-                    String model = rs.getString("extraField2");
+                } 
+                else if ("HardwareTicket".equals(type)) 
+                {
+                    String hardware = resultSet.getString("extraField1");
+                    String model = resultSet.getString("extraField2");
                     ticket = new HardwareTicket(ticketNum, name, description, email, phone, creationDate, priority, hardware, model);
-                } else if ("NetworkTicket".equals(type)) {
-                    String device = rs.getString("extraField1");
-                    String ipAddress = rs.getString("extraField2");
+                } 
+                else if ("NetworkTicket".equals(type)) 
+                {
+                    String device = resultSet.getString("extraField1");
+                    String ipAddress = resultSet.getString("extraField2");
                     ticket = new NetworkTicket(ticketNum, name, description, email, phone, creationDate, priority, device, ipAddress);
                 }
 
                 // Print the ticket details
-                if (ticket != null) {
+                if (ticket != null) 
+                {
                     System.out.println(ticket.toString());
                 }
             }
         }
     }
 
-    public void updateTicketStatus(String ticketNum, String newStatus) throws SQLException {
+    public void updateTicketStatus(String ticketNum, String newStatus) throws SQLException 
+    {
         String sql = "UPDATE tickets SET status = ? WHERE ticketNum = ?";
         try (Connection conn = DBConnection.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, newStatus);
-            pstmt.setString(2, ticketNum);
-            pstmt.executeUpdate();
+             PreparedStatement pstmnt = conn.prepareStatement(sql)) {
+            pstmnt.setString(1, newStatus);
+            pstmnt.setString(2, ticketNum);
+            pstmnt.executeUpdate();
         }
     }
 
-    public void deleteTicket(String ticketNum) throws SQLException {
+    public void deleteTicket(String ticketNum) throws SQLException 
+    {
         String sql = "DELETE FROM tickets WHERE ticketNum = ?";
         try (Connection conn = DBConnection.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, ticketNum);
-            pstmt.executeUpdate();
+             PreparedStatement pstmnt = conn.prepareStatement(sql)) 
+        {
+            pstmnt.setString(1, ticketNum);
+            pstmnt.executeUpdate();
         }
     }
     
@@ -176,13 +202,13 @@ public class TicketHandle {
         }
 
         String sql = "SELECT COUNT(*) FROM tickets WHERE ticketNum LIKE ?";
-        try (Connection conn = DBConnection.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) 
+        try (Connection conn = DBConnection.connect(); PreparedStatement pstmnt = conn.prepareStatement(sql)) 
         {
-            pstmt.setString(1, prefix + "%");
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) 
+            pstmnt.setString(1, prefix + "%");
+            ResultSet resultSet = pstmnt.executeQuery();
+            if (resultSet.next()) 
             {
-                int count = rs.getInt(1) + 1; // Next ticket number
+                int count = resultSet.getInt(1) + 1; // Next ticket number
                 return String.format("%s%03d", prefix, count);
             }
         }

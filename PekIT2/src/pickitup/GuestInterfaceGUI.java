@@ -15,11 +15,13 @@ import java.sql.SQLException;
  * @author Gio Turtal and Jose Laserna
  */
 
-public class GuestInterfaceGUI extends JFrame {
+public class GuestInterfaceGUI extends JFrame 
+{
     
     private TicketHandle ticketHandle = new TicketHandle(); // Initialize ticket handle
 
-    public GuestInterfaceGUI() {
+    public GuestInterfaceGUI() 
+    {
         
         // JFrame setup for Guest Menu
         setTitle("Guest Menu");
@@ -42,9 +44,11 @@ public class GuestInterfaceGUI extends JFrame {
         backButton.setBounds(100, 200, 200, 40); // Adjust size and position as needed
         menuPanel.add(backButton);
 
-        createTicketButton.addActionListener(new ActionListener() {
+        createTicketButton.addActionListener(new ActionListener() 
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) 
+            {
                 // Create a new JFrame for creating a ticket
                 JFrame createTicketFrame = new JFrame("Create Ticket");
                 createTicketFrame.setSize(400, 400);
@@ -106,9 +110,11 @@ public class GuestInterfaceGUI extends JFrame {
                 submitButton.setBounds(150, 260, 100, 30);
                 createTicketFrame.add(submitButton);
 
-                submitButton.addActionListener(new ActionListener() {
+                submitButton.addActionListener(new ActionListener() 
+                {
                     @Override
-                    public void actionPerformed(ActionEvent e) {
+                    public void actionPerformed(ActionEvent e) 
+                    {
                         // Gather information to create and save the ticket using TicketHandle's saveTicket method
                         String name = nameField.getText();
                         String email = emailField.getText();
@@ -117,9 +123,11 @@ public class GuestInterfaceGUI extends JFrame {
                         String type = (String) typeComboBox.getSelectedItem();
                         String priority = (String) priorityComboBox.getSelectedItem();
 
-                        try {
+                        try 
+                        {
                             // Call saveTicket with relevant fields based on ticket type
-                            switch (type) {
+                            switch (type) 
+                            {
                                 case "Hardware":
                                     String hardware = JOptionPane.showInputDialog("Enter the type of Hardware:");
                                     String model = JOptionPane.showInputDialog("Enter Model Number of Hardware:");
@@ -138,20 +146,23 @@ public class GuestInterfaceGUI extends JFrame {
                             }
                             JOptionPane.showMessageDialog(createTicketFrame, "Ticket Created Successfully!");
                             createTicketFrame.dispose(); // Close the frame after submission
-                        } catch (SQLException ex) {
+                        } 
+                        catch (SQLException ex) 
+                        {
                             JOptionPane.showMessageDialog(createTicketFrame, "Error creating ticket: " + ex.getMessage());
                             ex.printStackTrace();
                         }
                     }
                 });
-
                 createTicketFrame.setVisible(true);
             }
         });
         
-        backButton.addActionListener(new ActionListener() {
+        backButton.addActionListener(new ActionListener() 
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e) 
+            {
                 // Go back to the login screen
                 LoginGUI loginGUI = new LoginGUI();
                 loginGUI.setVisible(true);
@@ -171,11 +182,6 @@ public class GuestInterfaceGUI extends JFrame {
 
         // Make the frame visible
         setVisible(true);
-    }
-    
-    public static void main(String[] args) {
-        GuestInterfaceGUI guestInterface = new GuestInterfaceGUI();
-        guestInterface.setVisible(true);
     }
 }
 

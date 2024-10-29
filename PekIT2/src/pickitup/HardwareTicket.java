@@ -16,7 +16,8 @@ public class HardwareTicket extends Ticket
     private String hardware;
     private String model;
 
-    public HardwareTicket(String ticketNum, String name, String description, String email, String phone, Date creationDate, String priority, String hardware, String model) {
+    public HardwareTicket(String ticketNum, String name, String description, String email, String phone, Date creationDate, String priority, String hardware, String model) 
+    {
         super(ticketNum, name, description, email, phone, creationDate, priority);
         this.hardware = hardware;
         this.model = model;

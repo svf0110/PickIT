@@ -26,12 +26,14 @@ public class PickITUp
         
         SwingUtilities.invokeLater(() -> new LoginGUI());        
         
-        try (Connection conn = DBConnection.connect()) {
+        try (Connection conn = DBConnection.connect()) 
+        {
             if (conn != null) 
             {
                 System.out.println("Connected to the database successfully!");
             }
-        } catch (SQLException e) 
+        } 
+        catch (SQLException e) 
         {
             e.printStackTrace();
         }
