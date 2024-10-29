@@ -11,79 +11,91 @@ package pekit2;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 
-public class AccountHandle {
+public class AccountHandle 
+{
 
-    public void createAccountsTable() throws SQLException {
+    public void createAccountsTable() throws SQLException 
+    {
         String sql = "CREATE TABLE accounts ("
                 + "username VARCHAR(255) PRIMARY KEY, "
                 + "password VARCHAR(255), "
                 + "type VARCHAR(50))";
 
         try (Connection conn = DBConnection.connect();
-             Statement stmt = conn.createStatement()) {
-
-            stmt.executeUpdate(sql);
+             Statement stmnt = conn.createStatement()) 
+        {
+            stmnt.executeUpdate(sql);
             System.out.println("ACCOUNTS table created successfully.");
 
-        } catch (SQLException e) {
-            if (e.getSQLState().equals("X0Y32")) {
+        } 
+        catch (SQLException e) 
+        {
+            if (e.getSQLState().equals("X0Y32")) 
+            {
                 System.out.println("ACCOUNTS table already exists, skipping creation.");
-            } else {
+            } 
+            else 
+            {
                 throw e;
             }
         }
     }
 
-    public Account login(String username, String password) throws SQLException {
+    public Account login(String username, String password) throws SQLException 
+    {
         String sql = "SELECT * FROM accounts WHERE username = ? AND password = ?";
 
         try (Connection conn = DBConnection.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmnt = conn.prepareStatement(sql)) 
+        {
+            pstmnt.setString(1, username);
+            pstmnt.setString(2, password);
+            ResultSet resultset = pstmnt.executeQuery();
 
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                return new Account(rs.getString("username"), rs.getString("password"), rs.getString("type"));
+            if (resultset.next()) 
+            {
+                return new Account(resultset.getString("username"), resultset.getString("password"), resultset.getString("type"));
             }
         }
         return null; // If no matching account is found
     }
 
-    public void createAccount(String username, String password, String type) throws SQLException {
-
+    public void createAccount(String username, String password, String type) throws SQLException 
+    {
         Account newAccount = new Account(username, password, type);
         saveAccount(newAccount);
-        System.out.println("\n          Account created successfully.           \n");
     }
 
-    private void saveAccount(Account account) throws SQLException {
+    private void saveAccount(Account account) throws SQLException 
+    {
         String sql = "INSERT INTO accounts (username, password, type) VALUES (?, ?, ?)";
 
         try (Connection conn = DBConnection.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmnt = conn.prepareStatement(sql)) 
+        {
 
-            pstmt.setString(1, account.getUsername());
-            pstmt.setString(2, account.getPassword());
-            pstmt.setString(3, account.getType());
-            pstmt.executeUpdate();
+            pstmnt.setString(1, account.getUsername());
+            pstmnt.setString(2, account.getPassword());
+            pstmnt.setString(3, account.getType());
+            pstmnt.executeUpdate();
         }
     }
 
-    public List<Account> loadAccounts() throws SQLException {
+    public List<Account> loadAccounts() throws SQLException 
+    {
         List<Account> accounts = new ArrayList<>();
         String sql = "SELECT * FROM accounts";
 
         try (Connection conn = DBConnection.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             Statement stmnt = conn.createStatement();
+             ResultSet resultset = stmnt.executeQuery(sql)) 
+        {
 
-            while (rs.next()) {
-                Account account = new Account(rs.getString("username"), rs.getString("password"), rs.getString("type"));
+            while (resultset.next()) 
+            {
+                Account account = new Account(resultset.getString("username"), resultset.getString("password"), resultset.getString("type"));
                 accounts.add(account);
             }
         }
